@@ -1,0 +1,675 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searching Algorithms - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>5. Searching Algorithms</h2>
+            <div class="subtopic">
+                <h3>Linear Search</h3>
+                <p><strong>Definition:</strong> Linear Search sequentially checks each element in a list until the target is found or the list ends.</p>
+                <p><strong>Real-life Analogy:</strong> Like checking each book on a shelf one by one to find a specific title.</p>
+                <p><strong>Usage:</strong> Used for small or unsorted lists when searching for an element, or when simplicity is preferred.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) return i;
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {5, 3, 8, 4, 2};
+    int n = 5, key = 4;
+    int result = linearSearch(arr, n, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 0; i < n; i++)</code>: Iterates through each element.<br>
+                - <code>if (arr[i] == key)</code>: Checks if current element equals key.<br>
+                - <code>return i</code>: Returns index if found.<br>
+                - <code>return -1</code>: Returns -1 if key is not found.</p>
+                <p><strong>Example 1: Write a program to find an element in an array using linear search.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) return i;
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {10, 20, 30, 40, 50};
+    int n = 5;
+    int key;
+    cout << "Enter key to search: ";
+    cin >> key;
+    int result = linearSearch(arr, n, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count occurrences of an element using linear search.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int countOccurrences(int arr[], int n, int key) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) count++;
+    }
+    return count;
+}
+int main() {
+    int arr[] = {1, 2, 2, 3, 2};
+    int n = 5, key = 2;
+    cout << "Occurrences of " << key << ": " << countOccurrences(arr, n, key) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Binary Search</h3>
+                <p><strong>Definition:</strong> Binary Search finds an element in a sorted array by repeatedly dividing the search interval in half.</p>
+                <p><strong>Real-life Analogy:</strong> Like looking for a word in a dictionary by opening it in the middle and narrowing down to the correct half repeatedly.</p>
+                <p><strong>Usage:</strong> Used for efficient searching in sorted arrays, such as finding an element or checking its existence.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int binarySearch(int arr[], int left, int right, int key) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[mid] < key) left = mid + 1;
+        else right = mid -  personally;
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = 5, key = 10;
+    int result = binarySearch(arr, 0, n - 1, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>while (left <= right)</code>: Continues until search interval is valid.<br>
+                - <code>mid = left + (right - left) / 2</code>: Calculates middle index.<br>
+                - <code>if (arr[mid] == key)</code>: Returns index if key is found.<br>
+                - <code>left = mid + 1</code> or <code>right = mid - 1</code>: Narrows search to left or right half.</p>
+                <p><strong>Example 1: Write a program to implement recursive binary search.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int binarySearch(int arr[], int left, int right, int key) {
+    if (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[mid] < key) return binarySearch(arr, mid + 1, right, key);
+        return binarySearch(arr, left, mid - 1, key);
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = 5;
+    int key;
+    cout << "Enter key to search: ";
+    cin >> key;
+    int result = binarySearch(arr, 0, n - 1, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the first occurrence of an element using binary search.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int firstOccurrence(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = -1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) {
+            result = mid;
+            right = mid - 1;
+        } else if (arr[mid] < key) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 2, 2, 3};
+    int n = 5, key = 2;
+    cout << "First occurrence at index: " << firstOccurrence(arr, n, key) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Ternary Search</h3>
+                <p><strong>Definition:</strong> Ternary Search divides the search interval into three parts and determines which third contains the target, typically used for unimodal functions.</p>
+                <p><strong>Real-life Analogy:</strong> Like narrowing down a treasure hunt by splitting a map into three regions and checking two points to decide which region to explore.</p>
+                <p><strong>Usage:</strong> Used to find the maximum or minimum of a unimodal function or search in sorted arrays, though less common than binary search.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int ternarySearch(int arr[], int left, int right, int key) {
+    if (right >= left) {
+        int mid1 = left + (right - left) / 3;
+        int mid2 = right - (right - left) / 3;
+        if (arr[mid1] == key) return mid1;
+        if (arr[mid2] == key) return mid2;
+        if (key < arr[mid1]) return ternarySearch(arr, left, mid1 - 1, key);
+        if (key > arr[mid2]) return ternarySearch(arr, mid2 + 1, right, key);
+        return ternarySearch(arr, mid1 + 1, mid2 - 1, key);
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int n = 5, key = 4;
+    int result = ternarySearch(arr, 0, n - 1, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>mid1 = left + (right - left) / 3</code>: First partition point.<br>
+                - <code>mid2 = right - (right - left) / 3</code>: Second partition point.<br>
+                - <code>if (arr[mid1] == key)</code>: Checks if key is at mid1.<br>
+                - Recursively searches one of three intervals based on key’s value.</p>
+                <p><strong>Example 1: Write a program to implement ternary search for an element.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int ternarySearch(int arr[], int left, int right, int key) {
+    if (right >= left) {
+        int mid1 = left + (right - left) / 3;
+        int mid2 = right - (right - left) / 3;
+        if (arr[mid1] == key) return mid1;
+        if (arr[mid2] == key) return mid2;
+        if (key < arr[mid1]) return ternarySearch(arr, left, mid1 - 1, key);
+        if (key > arr[mid2]) return ternarySearch(arr, mid2 + 1, right, key);
+        return ternarySearch(arr, mid1 + 1, mid2 - 1, key);
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {1, 2, 3, 4, 5, 6};
+    int n = 6;
+    int key;
+    cout << "Enter key to search: ";
+    cin >> key;
+    int result = ternarySearch(arr, 0, n - 1, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the maximum of a unimodal array using ternary search.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int findMax(int arr[], int left, int right) {
+    while (right - left > 2) {
+        int mid1 = left + (right - left) / 3;
+        int mid2 = right - (right - left) / 3;
+        if (arr[mid1] > arr[mid2]) right = mid2;
+        else left = mid1;
+    }
+    int maxIdx = left;
+    for (int i = left + 1; i <= right; i++) {
+        if (arr[i] > arr[maxIdx]) maxIdx = i;
+    }
+    return maxIdx;
+}
+int main() {
+    int arr[] = {1, 3, 5, 4, 2};
+    int n = 5;
+    int maxIdx = findMax(arr, 0, n - 1);
+    cout << "Maximum element: " << arr[maxIdx] << " at index " << maxIdx << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Search in Rotated Array</h3>
+                <p><strong>Definition:</strong> Searches for an element in a sorted array that has been rotated (shifted) by some number of positions, using modified binary search.</p>
+                <p><strong>Real-life Analogy:</strong> Like finding a page in a book where pages are rotated, so you check which half is sorted to narrow down the search.</p>
+                <p><strong>Usage:</strong> Used in problems where a sorted array is rotated, such as finding an element in a circularly sorted list.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int searchRotated(int arr[], int n, int key) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[left] <= arr[mid]) {
+            if (key >= arr[left] && key < arr[mid]) right = mid - 1;
+            else left = mid + 1;
+        } else {
+            if (key > arr[mid] && key <= arr[right]) left = mid + 1;
+            else right = mid - 1;
+        }
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {4, 5, 6, 7, 0, 1, 2};
+    int n = 7, key = 0;
+    int result = searchRotated(arr, n, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>if (arr[mid] == key)</code>: Returns index if key is found.<br>
+                - <code>if (arr[left] <= arr[mid])</code>: Checks if left half is sorted.<br>
+                - <code>if (key >= arr[left] && key < arr[mid])</code>: Narrows to left half if key is in sorted range.<br>
+                - Otherwise, searches right half.</p>
+                <p><strong>Example 1: Write a program to search in a rotated sorted array.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int searchRotated(int arr[], int n, int key) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[left] <= arr[mid]) {
+            if (key >= arr[left] && key < arr[mid]) right = mid - 1;
+            else left = mid + 1;
+        } else {
+            if (key > arr[mid] && key <= arr[right]) left = mid + 1;
+            else right = mid - 1;
+        }
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {5, 6, 7, 8, 9, 1, 2, 3};
+    int n = 8;
+    int key;
+    cout << "Enter key to search: ";
+    cin >> key;
+    int result = searchRotated(arr, n, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the rotation point in a rotated sorted array.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int findRotationPoint(int arr[], int n) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (mid < n - 1 && arr[mid] > arr[mid + 1]) return mid + 1;
+        if (mid > 0 && arr[mid - 1] > arr[mid]) return mid;
+        if (arr[left] <= arr[mid]) left = mid + 1;
+        else right = mid - 1;
+    }
+    return 0;
+}
+int main() {
+    int arr[] = {4, 5, 6, 1, 2, 3};
+    int n = 6;
+    cout << "Rotation point at index: " << findRotationPoint(arr, n) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Lower/Upper Bound</h3>
+                <p><strong>Definition:</strong> Lower Bound finds the first position where an element is not less than the key, and Upper Bound finds the first position where an element is greater than the key in a sorted array.</p>
+                <p><strong>Real-life Analogy:</strong> Like finding the first book on a shelf with a title alphabetically equal to or after a given word (Lower Bound), or the first book after it (Upper Bound).</p>
+                <p><strong>Usage:</strong> Used to find positions of elements, count occurrences, or implement binary search-based solutions.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int lowerBound(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = n;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] >= key) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 2, 2, 3};
+    int n = 5, key = 2;
+    cout << "Lower Bound at index: " << lowerBound(arr, n, key) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>if (arr[mid] >= key)</code>: Updates result if mid element is not less than key.<br>
+                - <code>right = mid - 1</code>: Searches left half for earlier position.<br>
+                - <code>result = n</code>: Default if no element is >= key.</p>
+                <p><strong>Example 1: Write a program to find the lower and upper bound of an element.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int lowerBound(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = n;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] >= key) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int upperBound(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = n;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] > key) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 2, 2, 3};
+    int n = 5, key = 2;
+    cout << "Lower Bound: " << lowerBound(arr, n, key) << endl;
+    cout << "Upper Bound: " << upperBound(arr, n, key) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count occurrences using lower and upper bound.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int lowerBound(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = n;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] >= key) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int upperBound(int arr[], int n, int key) {
+    int left = 0, right = n - 1, result = n;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] > key) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 2, 2, 3};
+    int n = 5, key = 2;
+    int count = upperBound(arr, n, key) - lowerBound(arr, n, key);
+    cout << "Occurrences of " << key << ": " << count << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Binary Search on Answer</h3>
+                <p><strong>Definition:</strong> Binary Search on Answer applies binary search to find the optimal value (e.g., minimum or maximum) that satisfies a condition, often used in optimization problems.</p>
+                <p><strong>Real-life Analogy:</strong> Like guessing the right amount of sugar for a recipe by testing high and low amounts and narrowing down to the perfect quantity.</p>
+                <p><strong>Usage:</strong> Used for problems like finding the minimum time, maximum size, or optimal value that meets a criterion.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isPossible(int arr[], int n, int k, int mid) {
+    int count = 1, sum = 0;
+    for (int i = 0; i < n; i++) {
+        if (sum + arr[i] > mid) {
+            count++;
+            sum = arr[i];
+        } else {
+            sum += arr[i];
+        }
+    }
+    return count <= k;
+}
+int minMaxSum(int arr[], int n, int k) {
+    int left = 0, right = 0, result = 0;
+    for (int i = 0; i < n; i++) {
+        left = max(left, arr[i]);
+        right += arr[i];
+    }
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (isPossible(arr, n, k, mid)) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 3, 4};
+    int n = 4, k = 2;
+    cout << "Minimum maximum sum: " << minMaxSum(arr, n, k) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>isPossible</code>: Checks if it’s possible to split array into k subarrays with max sum <= mid.<br>
+                - <code>left = max(arr[i])</code>: Minimum possible max sum (largest element).<br>
+                - <code>right = sum(arr[i])</code>: Maximum possible max sum (total sum).<br>
+                - Binary search finds smallest valid max sum.</p>
+                <p><strong>Example 1: Write a program to find the minimum maximum sum of k subarrays.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isPossible(int arr[], int n, int k, int mid) {
+    int count = 1, sum = 0;
+    for (int i = 0; i < n; i++) {
+        if (sum + arr[i] > mid) {
+            count++;
+            sum = arr[i];
+        } else {
+            sum += arr[i];
+        }
+    }
+    return count <= k;
+}
+int minMaxSum(int arr[], int n, int k) {
+    int left = 0, right = 0, result = 0;
+    for (int i = 0; i < n; i++) {
+        left = max(left, arr[i]);
+        right += arr[i];
+    }
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (isPossible(arr, n, k, mid)) {
+            result = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int arr[] = {1, 2, 3, 4};
+    int n = 4, k;
+    cout << "Enter k: ";
+    cin >> k;
+    cout << "Minimum maximum sum: " << minMaxSum(arr, n, k) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the square root using binary search on answer.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int sqrtBinarySearch(int n) {
+    if (n == 0 || n == 1) return n;
+    int left = 1, right = n, result = 0;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (mid * mid == n) return mid;
+        if (mid * mid < n) {
+            result = mid;
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return result;
+}
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << "Square root: " << sqrtBinarySearch(n) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

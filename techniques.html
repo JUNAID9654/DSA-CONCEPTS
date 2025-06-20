@@ -1,0 +1,639 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techniques & Approaches - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>7. Techniques & Approaches</h2>
+            <div class="subtopic">
+                <h3>Two Pointers</h3>
+                <p><strong>Definition:</strong> Two Pointers uses two pointers to iterate through an array or list, often moving them based on conditions to solve problems efficiently.</p>
+                <p><strong>Real-life Analogy:</strong> Like two people reading a book from opposite ends, moving closer or further based on what they find, to locate a specific chapter.</p>
+                <p><strong>Usage:</strong> Used for problems like finding pairs with a given sum, removing duplicates, or partitioning arrays.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+bool findPair(vector<int>& arr, int sum) {
+    int left = 0, right = arr.size() - 1;
+    while (left < right) {
+        if (arr[left] + arr[right] == sum) return true;
+        else if (arr[left] + arr[right] < sum) left++;
+        else right--;
+    }
+    return false;
+}
+int main() {
+    vector<int> arr = {2, 4, 6, 8, 10};
+    int sum = 12;
+    cout << (findPair(arr, sum) ? "Pair found" : "No pair found") << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>left = 0, right = arr.size() - 1</code>: Initialize pointers at array ends.<br>
+                - <code>while (left < right)</code>: Continue until pointers meet.<br>
+                - <code>arr[left] + arr[right] == sum</code>: Checks if pair sums to target.<br>
+                - Adjusts pointers based on sum comparison.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to find a pair with given sum in a sorted array.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+bool findPair(vector<int>& arr, int sum) {
+    int left = 0, right = arr.size() - 1;
+    while (left < right) {
+        if (arr[left] + arr[right] == sum) return true;
+        else if (arr[left] + arr[right] < sum) left++;
+        else right--;
+    }
+    return false;
+}
+int main() {
+    int n, sum;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    vector<int> arr(n);
+    cout << "Enter sorted elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cout << "Enter sum: ";
+    cin >> sum;
+    cout << (findPair(arr, sum) ? "Pair found" : "No pair found") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to remove duplicates from a sorted array.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int removeDuplicates(int arr[], int n) {
+    if (n <= 1) return n;
+    int j = 1;
+    for (int i = 1; i < n; i++) {
+        if (arr[i] != arr[i - 1]) {
+            arr[j++] = arr[i];
+        }
+    }
+    return j;
+}
+int main() {
+    int arr[] = {1, 1, 2, 2, 3, 4, 4};
+    int n = 7;
+    int newSize = removeDuplicates(arr, n);
+    cout << "Array after removing duplicates: ";
+    for (int i = 0; i < newSize; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Sliding Window</h3>
+                <p><strong>Definition:</strong> Sliding Window maintains a window of elements that expands or shrinks based on conditions, used to process subarrays or substrings efficiently.</p>
+                <p><strong>Real-life Analogy:</strong> Like reading a few pages of a book at a time, sliding the reading window forward as you finish, to find a specific pattern.</p>
+                <p><strong>Usage:</strong> Used for problems like finding the longest substring with certain properties or maximum/minimum of subarrays of fixed size.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int maxSumSubarray(int arr[], int n, int k) {
+    int window_sum = 0;
+    for (int i = 0; i < k; i++) window_sum += arr[i];
+    int max_sum = window_sum;
+    for (int i = k; i < n; i++) {
+        window_sum += arr[i] - arr[i - k];
+        max_sum = max(max_sum, window_sum);
+    }
+    return max_sum;
+}
+int main() {
+    int arr[] = {1, 4, 2, 10, 2, 3, 1};
+    int n = 7, k = 3;
+    cout << "Max subarray sum: " << maxSumSubarray(arr, n, k) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>window_sum += arr[i]</code>: Initializes sum of first k elements.<br>
+                - <code>window_sum += arr[i] - arr[i - k]</code>: Slides window by adding new element and removing oldest.<br>
+                - <code>max_sum = max(max_sum, window_sum)</code>: Tracks maximum sum.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to find the longest substring with at most k distinct characters.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+int longestSubstringKDistinct(string s, int k) {
+    int count[256] = {0};
+    int distinct = 0, max_len = 0;
+    int left = 0;
+    for (int right = 0; right < s.length(); right++) {
+        if (count[s[right]]++ == 0) distinct++;
+        while (distinct > k) {
+            if (--count[s[left++]] == 0) distinct--;
+        }
+        max_len = max(max_len, right - left + 1);
+    }
+    return max_len;
+}
+int main() {
+    string s = "eceba";
+    int k = 2;
+    cout << "Longest substring length: " << longestSubstringKDistinct(s, k) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the maximum sum subarray of size k.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int maxSumSubarray(int arr[], int n, int k) {
+    int window_sum = 0;
+    for (int i = 0; i < k; i++) window_sum += arr[i];
+    int max_sum = window_sum;
+    for (int i = k; i < n; i++) {
+        window_sum += arr[i] - arr[i - k];
+        max_sum = max(max_sum, window_sum);
+    }
+    return max_sum;
+}
+int main() {
+    int n, k;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cout << "Enter window size k: ";
+    cin >> k;
+    cout << "Max subarray sum: " << maxSumSubarray(arr, n, k) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Divide & Conquer</h3>
+                <p><strong>Definition:</strong> Divide & Conquer breaks a problem into smaller subproblems, solves them recursively, and combines the solutions.</p>
+                <p><strong>Real-life Analogy:</strong> Like organizing a large event by dividing tasks into smaller groups, solving each, and combining results for the final event.</p>
+                <p><strong>Usage:</strong> Used in algorithms like merge sort, quick sort, or finding the closest pair of points.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = 6;
+    mergeSort(arr, 0, n - 1);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>mergeSort</code>: Divides array into two halves.<br>
+                - <code>m = l + (r - l) / 2</code>: Finds middle point.<br>
+                - <code>merge</code>: Combines sorted halves.<br>
+                - Time Complexity: O(n log n), Space Complexity: O(n).</p>
+                <p><strong>Example 1: Write a program to implement merge sort using divide and conquer.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    mergeSort(arr, 0, n - 1);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the maximum element in an array using divide and conquer.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int findMax(int arr[], int l, int r) {
+    if (l == r) return arr[l];
+    int m = l + (r - l) / 2;
+    int leftMax = findMax(arr, l, m);
+    int rightMax = findMax(arr, m + 1, r);
+    return max(leftMax, rightMax);
+}
+int main() {
+    int arr[] = {1, 3, 5, 2, 4};
+    int n = 5;
+    cout << "Maximum element: " << findMax(arr, 0, n - 1) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Greedy</h3>
+                <p><strong>Definition:</strong> Greedy algorithms make locally optimal choices at each step, hoping to find a global optimum.</p>
+                <p><strong>Real-life Analogy:</strong> Like choosing the shortest line at a grocery store each time, hoping to finish shopping fastest overall.</p>
+                <p><strong>Usage:</strong> Used for problems like activity selection, fractional knapsack, or minimum spanning trees.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+void activitySelection(vector<pair<int, int>>& activities) {
+    sort(activities.begin(), activities.end(), [](auto a, auto b) {
+        return a.second < b.second;
+    });
+    int last = 0;
+    cout << "Selected activities: ";
+    for (int i = 0; i < activities.size(); i++) {
+        if (i == 0 || activities[i].first >= activities[last].second) {
+            cout << "(" << activities[i].first << ", " << activities[i].second << ") ";
+            last = i;
+        }
+    }
+    cout << endl;
+}
+int main() {
+    vector<pair<int, int>> activities = {{1, 2}, {3, 4}, {0, 6}, {5, 7}, {8, 9}, {5, 9}};
+    activitySelection(activities);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>sort</code>: Sorts activities by finish time.<br>
+                - <code>if (activities[i].first >= activities[last].second)</code>: Selects non-overlapping activities.<br>
+                - <code>last = i</code>: Updates last selected activity.<br>
+                - Time Complexity: O(n log n), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to solve activity selection problem.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+void activitySelection(vector<pair<int, int>>& activities) {
+    sort(activities.begin(), activities.end(), [](auto a, auto b) {
+        return a.second < b.second;
+    });
+    int last = 0;
+    cout << "Selected activities: ";
+    for (int i = 0; i < activities.size(); i++) {
+        if (i == 0 || activities[i].first >= activities[last].second) {
+            cout << "(" << activities[i].first << ", " << activities[i].second << ") ";
+            last = i;
+        }
+    }
+    cout << endl;
+}
+int main() {
+    int n;
+    cout << "Enter number of activities: ";
+    cin >> n;
+    vector<pair<int, int>> activities(n);
+    cout << "Enter start and finish times: ";
+    for (int i = 0; i < n; i++) cin >> activities[i].first >> activities[i].second;
+    activitySelection(activities);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to solve fractional knapsack problem.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+double fractionalKnapsack(vector<pair<int, int>>& items, int W) {
+    sort(items.begin(), items.end(), [](auto a, auto b) {
+        return (double)a.first / a.second > (double)b.first / b.second;
+    });
+    double total_value = 0;
+    for (auto& item : items) {
+        int value = item.first, weight = item.second;
+        if (W >= weight) {
+            total_value += value;
+            W -= weight;
+        } else {
+            total_value += (double)(value * W) / weight;
+            break;
+        }
+    }
+    return total_value;
+}
+int main() {
+    int n, W;
+    cout << "Enter number of items: ";
+    cin >> n;
+    cout << "Enter capacity: ";
+    cin >> W;
+    vector<pair<int, int>> items(n);
+    cout << "Enter value and weight for each item: ";
+    for (int i = 0; i < n; i++) cin >> items[i].first >> items[i].second;
+    cout << "Maximum value: " << fractionalKnapsack(items, W) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Dynamic Programming</h3>
+                <p><strong>Definition:</strong> Dynamic Programming solves problems by breaking them into overlapping subproblems and storing solutions to avoid recomputation.</p>
+                <p><strong>Real-life Analogy:</strong> Like planning a trip by calculating the shortest path to each city once and reusing those calculations for other routes.</p>
+                <p><strong>Usage:</strong> Used for problems like knapsack, longest common subsequence, or shortest paths.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int fibonacci(int n) {
+    int dp[n + 1];
+    dp[0] = 0;
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+int main() {
+    int n = 10;
+    cout << "Fibonacci(" << n << "): " << fibonacci(n) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>dp[n + 1]</code>: Array to store subproblem solutions.<br>
+                - <code>dp[0] = 0; dp[1] = 1</code>: Base cases.<br>
+                - <code>dp[i] = dp[i - 1] + dp[i - 2]</code>: Builds solution using previous results.<br>
+                - Time Complexity: O(n), Space Complexity: O(n).</p>
+                <p><strong>Example 1: Write a program to solve 0/1 knapsack problem.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int knapsack(vector<int>& wt, vector<int>& val, int W, int n) {
+    vector<vector<int>> dp(n + 1, vector<int>(W + 1));
+    for (int i = 0; i <= n; i++) {
+        for (int w = 0; w <= W; w++) {
+            if (i == 0 || w == 0) dp[i][w] = 0;
+            else if (wt[i - 1] <= w)
+                dp[i][w] = max(val[i - 1] + dp[i - 1][w - wt[i - 1]], dp[i - 1][w]);
+            else dp[i][w] = dp[i - 1][w];
+        }
+    }
+    return dp[n][W];
+}
+int main() {
+    int n, W;
+    cout << "Enter number of items: ";
+    cin >> n;
+    cout << "Enter capacity: ";
+    cin >> W;
+    vector<int> val(n), wt(n);
+    cout << "Enter values: ";
+    for (int i = 0; i < n; i++) cin >> val[i];
+    cout << "Enter weights: ";
+    for (int i = 0; i < n; i++) cin >> wt[i];
+    cout << "Maximum value: " << knapsack(wt, val, W, n) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the longest common subsequence.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+int lcs(string X, string Y) {
+    int m = X.length(), n = Y.length();
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == 0 || j == 0) dp[i][j] = 0;
+            else if (X[i - 1] == Y[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+            else dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    return dp[m][n];
+}
+int main() {
+    string X = "ABCDGH", Y = "AEDFHR";
+    cout << "Length of LCS: " << lcs(X, Y) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Bit Manipulation</h3>
+                <p><strong>Definition:</strong> Bit Manipulation uses bitwise operations (AND, OR, XOR, shifts) to solve problems efficiently at the bit level.</p>
+                <p><strong>Real-life Analogy:</strong> Like using switches in a control panel to turn on/off features, combining them to achieve specific configurations.</p>
+                <p><strong>Usage:</strong> Used for problems like checking set bits, finding single numbers, or optimizing arithmetic operations.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int countSetBits(int n) {
+    int count = 0;
+    while (n) {
+        count += n & 1;
+        n >>= 1;
+    }
+    return count;
+}
+int main() {
+    int n = 9; // Binary: 1001
+    cout << "Set bits in " << n << ": " << countSetBits(n) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>n & 1</code>: Checks if least significant bit is 1.<br>
+                - <code>n >>= 1</code>: Right shifts to check next bit.<br>
+                - <code>count += n & 1</code>: Increments count for set bits.<br>
+                - Time Complexity: O(log n), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to find the single number in an array where others appear twice.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int singleNumber(vector<int>& nums) {
+    int result = 0;
+    for (int num : nums) {
+        result ^= num;
+    }
+    return result;
+}
+int main() {
+    vector<int> nums = {4, 1, 2, 1, 2};
+    cout << "Single number: " << singleNumber(nums) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to check if a number is a power of two.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isPowerOfTwo(int n) {
+    return n > 0 && (n & (n - 1)) == 0;
+}
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << (isPowerOfTwo(n) ? "Power of two" : "Not a power of two") << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

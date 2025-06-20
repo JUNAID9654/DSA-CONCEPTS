@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA in C++ - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9ecef;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #007bff;
+            font-size: 36px;
+        }
+        .roadmap-card {
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .roadmap-card::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 50%;
+            left: 20px;
+            top: 20px;
+        }
+        .roadmap-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .roadmap-card h3 {
+            margin: 0 0 15px 50px;
+            font-size: 24px;
+        }
+        .subtopic-card {
+            background-color: white;
+            color: #2c3e50;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .subtopic-card span {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .level {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Data Structures & Algorithms in C++</h1>
+            <p>A comprehensive guide covering all major DSA topics with examples</p>
+        </div>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>📚 Complete DSA Learning Roadmap</h2>
+            <div class="level">
+                <h3><span class="emoji">🟢</span>Foundation Level - Start Here</h3>
+                <div class="roadmap-card">
+                    <span class="badge">1</span>
+                    <h3>Programming Basics</h3>
+                    <div class="subtopic-card"><span>🟢</span>Variables & Data Types</div>
+                    <div class="subtopic-card"><span>🟢</span>Input/Output (cin/cout)</div>
+                    <div class="subtopic-card"><span>🟢</span>Operators (Arithmetic, Logical, Relational)</div>
+                    <div class="subtopic-card"><span>🟢</span>Conditional Statements: if, if-else, switch-case</div>
+                    <div class="subtopic-card"><span>🟢</span>Loops: for, while, do-while</div>
+                    <div class="subtopic-card"><span>🟢</span>Functions (with parameters & return types)</div>
+                    <div class="subtopic-card"><span>🟢</span>Arrays (1D, 2D)</div>
+                    <div class="subtopic-card"><span>🟢</span>Strings (character arrays, string class)</div>
+                    <div class="subtopic-card"><span>🟢</span>Pointers & References</div>
+                    <div class="subtopic-card"><span>🟢</span>Recursion</div>
+                    <div class="subtopic-card"><span>🟢</span>STL Basics: vector, pair, map, set</div>
+                </div>
+                <div class="roadmap-card">
+                    <span class="badge">2</span>
+                    <h3>Logic Building + Complexity</h3>
+                    <div class="subtopic-card"><span>🧠</span>Dry Run Skills: Step-by-step tracing</div>
+                    <div class="subtopic-card"><span>🧠</span>Mathematics + Patterns</div>
+                    <div class="subtopic-card"><span>🧠</span>Bit Manipulation</div>
+                    <div class="subtopic-card"><span>🧠</span>Time & Space Complexity</div>
+                    <div class="subtopic-card"><span>🧠</span>Big O Notation</div>
+                    <div class="subtopic-card"><span>🧠</span>Worst/Average/Best Case</div>
+                    <div class="subtopic-card"><span>🧠</span>Constant vs Logarithmic vs Linear</div>
+                </div>
+            </div>
+            <div class="level">
+                <h3><span class="emoji">📦</span>Data Structures Level</h3>
+                <div class="roadmap-card">
+                    <span class="badge">3</span>
+                    <h3>Linear Data Structures</h3>
+                    <div class="subtopic-card"><span>📦</span>Arrays
+                        <ul>
+                            <li>Static, Dynamic</li>
+                            <li>Operations: Insertion, Deletion, Traversal</li>
+                            <li>Sliding Window</li>
+                            <li>Prefix Sum</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>📦</span>Strings
+                        <ul>
+                            <li>Palindrome, Anagram</li>
+                            <li>Pattern Matching (Naive/KMP)</li>
+                            <li>String Manipulation</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>📦</span>Linked Lists
+                        <ul>
+                            <li>Singly Linked List</li>
+                            <li>Doubly Linked List</li>
+                            <li>Circular Linked List</li>
+                            <li>Operations: insert, delete, reverse, detect loop</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>📦</span>Stack (LIFO)
+                        <ul>
+                            <li>Implementation using array & linked list</li>
+                            <li>Applications: Balanced Parentheses, NGE, Infix to Postfix</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>📦</span>Queue (FIFO)
+                        <ul>
+                            <li>Implementation using array & linked list</li>
+                            <li>Circular Queue</li>
+                            <li>Deque (Double-Ended Queue)</li>
+                            <li>Applications: Sliding Window Maximum, LRU Cache</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="roadmap-card">
+                    <span class="badge">4</span>
+                    <h3>Non-Linear Data Structures</h3>
+                    <div class="subtopic-card"><span>🌲</span>Trees
+                        <ul>
+                            <li>Binary Tree</li>
+                            <li>Traversals: Inorder, Preorder, Postorder, Level Order</li>
+                            <li>Binary Search Tree (BST)</li>
+                            <li>Insert, Search, Delete</li>
+                            <li>AVL Tree</li>
+                            <li>Segment Tree (Range Queries)</li>
+                            <li>Trie (Prefix Tree)</li>
+                            <li>Red-Black Tree</li>
+                            <li>Binary Indexed Tree (Fenwick Tree)</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🌲</span>Heaps
+                        <ul>
+                            <li>Min-Heap / Max-Heap</li>
+                            <li>Heapify, Heap Sort</li>
+                            <li>Priority Queue</li>
+                            <li>Applications: Kth Largest, Top K Frequent</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🌲</span>Graphs
+                        <ul>
+                            <li>Representation: Adjacency List, Adjacency Matrix</li>
+                            <li>Traversal: BFS (Breadth-First Search)</li>
+                            <li>DFS (Depth-First Search)</li>
+                            <li>Detect Cycles (Directed & Undirected)</li>
+                            <li>Connected Components</li>
+                            <li>Dijkstra's Algorithm</li>
+                            <li>Bellman-Ford</li>
+                            <li>Floyd Warshall</li>
+                            <li>Topological Sort</li>
+                            <li>MST (Kruskal's, Prim's)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="level">
+                <h3><span class="emoji">🔍</span>Algorithms Level</h3>
+                <div class="roadmap-card">
+                    <span class="badge">5</span>
+                    <h3>Searching Algorithms</h3>
+                    <div class="subtopic-card"><span>🔍</span>Linear Search</div>
+                    <div class="subtopic-card"><span>🔍</span>Binary Search</div>
+                    <div class="subtopic-card"><span>🔍</span>Ternary Search</div>
+                    <div class="subtopic-card"><span>🔍</span>Binary Search on Answer (Advanced)</div>
+                    <div class="subtopic-card"><span>🔍</span>Search in Rotated Sorted Array</div>
+                    <div class="subtopic-card"><span>🔍</span>Lower Bound / Upper Bound (STL)</div>
+                    <div class="subtopic-card"><span>🔍</span>Exponential Search</div>
+                    <div class="subtopic-card"><span>🔍</span>Interpolation Search</div>
+                </div>
+                <div class="roadmap-card">
+                    <span class="badge">6</span>
+                    <h3>Sorting Algorithms</h3>
+                    <div class="subtopic-card"><span>🔃</span>Basic Sorting
+                        <ul>
+                            <li>Bubble Sort</li>
+                            <li>Selection Sort</li>
+                            <li>Insertion Sort</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔃</span>Advanced Sorting
+                        <ul>
+                            <li>Merge Sort (Divide & Conquer)</li>
+                            <li>Quick Sort</li>
+                            <li>Heap Sort</li>
+                            <li>Counting Sort</li>
+                            <li>Radix Sort</li>
+                            <li>Bucket Sort</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="roadmap-card">
+                    <span class="badge">7</span>
+                    <h3>Techniques & Approaches</h3>
+                    <div class="subtopic-card"><span>🧰</span>Two Pointer Technique
+                        <ul>
+                            <li>Pair Sum</li>
+                            <li>Trapping Rain Water</li>
+                            <li>Container With Most Water</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🧰</span>Sliding Window
+                        <ul>
+                            <li>Maximum Sum Subarray</li>
+                            <li>Longest Substring Without Repeat</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🧰</span>Prefix Sum / Difference Array
+                        <ul>
+                            <li>Subarray Sum</li>
+                            <li>Range Updates</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🧰</span>Recursion & Backtracking
+                        <ul>
+                            <li>Factorial, Fibonacci, Tower of Hanoi</li>
+                            <li>Sudoku Solver</li>
+                            <li>N-Queens</li>
+                            <li>Subset Generation</li>
+                            <li>Permutations</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="roadmap-card">
+                    <span class="badge">8</span>
+                    <h3>Core Algorithms</h3>
+                    <div class="subtopic-card"><span>💡</span>Greedy
+                        <ul>
+                            <li>Activity Selection</li>
+                            <li>Fractional Knapsack</li>
+                            <li>Huffman Encoding</li>
+                            <li>Job Scheduling</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>💡</span>Divide and Conquer
+                        <ul>
+                            <li>Merge Sort</li>
+                            <li>Quick Sort</li>
+                            <li>Binary Search</li>
+                            <li>Closest Pair of Points</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>💡</span>Dynamic Programming
+                        <ul>
+                            <li>Memoization & Tabulation</li>
+                            <li>0/1 Knapsack</li>
+                            <li>Longest Common Subsequence</li>
+                            <li>Longest Increasing Subsequence</li>
+                            <li>Matrix Chain Multiplication</li>
+                            <li>DP on Trees / DP on Grids</li>
+                            <li>DP with Bitmasking</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>💡</span>Bit Manipulation
+                        <ul>
+                            <li>Check Odd/Even</li>
+                            <li>Count Set Bits</li>
+                            <li>XOR Problems</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="level">
+                <h3><span class="emoji">🔁</span>Advanced Level</h3>
+                <div class="roadmap-card">
+                    <span class="badge">9</span>
+                    <h3>Advanced Topics</h3>
+                    <div class="subtopic-card"><span>🔁</span>Hashing
+                        <ul>
+                            <li>Hash Maps / Sets</li>
+                            <li>Collision Resolution</li>
+                            <li>Frequency Count Problems</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Trie (Prefix Tree)
+                        <ul>
+                            <li>Auto-Complete</li>
+                            <li>Word Dictionary</li>
+                            <li>Prefix Matching</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Segment Tree
+                        <ul>
+                            <li>Range Query + Updates</li>
+                            <li>Lazy Propagation</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Binary Indexed Tree (Fenwick Tree)
+                        <ul>
+                            <li>Efficient range sums & point updates</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Disjoint Set Union (DSU)
+                        <ul>
+                            <li>Union-Find</li>
+                            <li>Cycle Detection in Graph</li>
+                            <li>Kruskal's Algorithm</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Graph Algorithms
+                        <ul>
+                            <li>Shortest Paths</li>
+                            <li>Topo Sort</li>
+                            <li>Union-Find</li>
+                            <li>Network Flow (Ford Fulkerson)</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Geometry Algorithms
+                        <ul>
+                            <li>Line Intersection</li>
+                            <li>Convex Hull</li>
+                        </ul>
+                    </div>
+                    <div class="subtopic-card"><span>🔁</span>Randomized Algorithms
+                        <ul>
+                            <li>QuickSelect</li>
+                            <li>Reservoir Sampling</li>
+                            <li>Monte Carlo / Las Vegas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="level">
+                <h3><span class="emoji">🎓</span>Mastery Level</h3>
+                <div class="roadmap-card">
+                    <span class="badge">10</span>
+                    <h3>Interview & Practice Focus Areas</h3>
+                    <div class="subtopic-card"><span>🎓</span>Arrays & Strings</div>
+                    <div class="subtopic-card"><span>🎓</span>Sliding Window</div>
+                    <div class="subtopic-card"><span>🎓</span>Hashing & Maps</div>
+                    <div class="subtopic-card"><span>🎓</span>Stack/Queue</div>
+                    <div class="subtopic-card"><span>🎓</span>Two Pointers</div>
+                    <div class="subtopic-card"><span>🎓</span>Linked Lists</div>
+                    <div class="subtopic-card"><span>🎓</span>Trees & BST</div>
+                    <div class="subtopic-card"><span>🎓</span>Recursion + Backtracking</div>
+                    <div class="subtopic-card"><span>🎓</span>Dynamic Programming</div>
+                    <div class="subtopic-card"><span>🎓</span>Greedy + Graphs</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Data Structures - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>3. Linear Data Structures</h2>
+            <div class="subtopic">
+                <h3>Arrays (Static/Dynamic, Sliding Window, Prefix Sum)</h3>
+                <p><strong>Definition:</strong> Arrays are collections of elements of the same type stored in contiguous memory. Static arrays have fixed size, dynamic arrays (like vectors) can resize, sliding window processes subarrays, and prefix sum stores cumulative sums.</p>
+                <p><strong>Real-life Analogy:</strong> Like a row of mailboxes, each holding one letter (static array), or a resizable notebook (dynamic array). Sliding window is like reading a few pages at a time, and prefix sum is like keeping a running total of expenses.</p>
+                <p><strong>Usage:</strong> Used for storing lists, efficient range queries (prefix sum), or processing subarrays (sliding window).</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5}; // Static array
+    vector<int> vec = {1, 2, 3}; // Dynamic array
+    int prefix[5]; // Prefix sum
+    prefix[0] = arr[0];
+    for (int i = 1; i < 5; i++) {
+        prefix[i] = prefix[i-1] + arr[i];
+    }
+    cout << prefix[4] << endl; // Sum of first 5 elements
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int arr[5]</code>: Static array of 5 integers.<br>
+                - <code>vector<int> vec</code>: Dynamic array that can grow.<br>
+                - <code>prefix[i] = prefix[i-1] + arr[i]</code>: Computes prefix sum.<br>
+                - <code>cout << prefix[4]</code>: Outputs sum of array elements.</p>
+                <p><strong>Example 1: Write a program to find the sum of a subarray using prefix sum.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int n = 5;
+    int prefix[n];
+    prefix[0] = arr[0];
+    for (int i = 1; i < n; i++) {
+        prefix[i] = prefix[i-1] + arr[i];
+    }
+    int l = 1, r = 3; // 0-based indexing
+    int sum = (l == 0) ? prefix[r] : prefix[r] - prefix[l-1];
+    cout << "Subarray sum: " << sum << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the maximum sum of a subarray of size k using sliding window.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int arr[] = {1, 4, 2, 10, 2, 3, 1};
+    int n = 7, k = 3;
+    int sum = 0;
+    for (int i = 0; i < k; i++) {
+        sum += arr[i];
+    }
+    int max_sum = sum;
+    for (int i = k; i < n; i++) {
+        sum = sum + arr[i] - arr[i-k];
+        if (sum > max_sum) max_sum = sum;
+    }
+    cout << "Max subarray sum: " << max_sum << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 3: Write a program to resize a dynamic array using vector.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    vector<int> vec;
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        vec.push_back(x);
+    }
+    cout << "Vector elements: ";
+    for (int x : vec) {
+        cout << x << " ";
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Strings (Palindrome, Anagram, Pattern Matching)</h3>
+                <p><strong>Definition:</strong> Strings are sequences of characters. Palindromes read the same backward, anagrams are strings with the same characters in different orders, and pattern matching finds substrings.</p>
+                <p><strong>Real-life Analogy:</strong> A palindrome is like a word that looks the same in a mirror (e.g., "deed"). An anagram is like rearranging letter blocks to form a new word. Pattern matching is like searching for a phrase in a book.</p>
+                <p><strong>Usage:</strong> Used in text processing, like validating palindromes, checking anagrams, or searching for patterns in strings.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+bool isPalindrome(string s) {
+    int l = 0, r = s.length() - 1;
+    while (l < r) {
+        if (s[l++] != s[r--]) return false;
+    }
+    return true;
+}
+int main() {
+    string s = "radar";
+    cout << (isPalindrome(s) ? "Palindrome" : "Not Palindrome") << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>bool isPalindrome(string s)</code>: Function to check if string is a palindrome.<br>
+                - <code>while (l < r)</code>: Compares characters from both ends.<br>
+                - <code>s[l++] != s[r--]</code>: Returns false if characters differ.<br>
+                - <code>return true</code>: String is a palindrome if all characters match.</p>
+                <p><strong>Example 1: Write a program to check if a string is a palindrome.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+bool isPalindrome(string s) {
+    int l = 0, r = s.length() - 1;
+    while (l < r) {
+        if (s[l++] != s[r--]) return false;
+    }
+    return true;
+}
+int main() {
+    string s;
+    cout << "Enter a string: ";
+    getline(cin, s);
+    cout << (isPalindrome(s) ? "Palindrome" : "Not Palindrome") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to check if two strings are anagrams.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+bool areAnagrams(string s1, string s2) {
+    if (s1.length() != s2.length()) return false;
+    int count[26] = {0};
+    for (int i = 0; i < s1.length(); i++) {
+        count[s1[i] - 'a']++;
+        count[s2[i] - 'a']--;
+    }
+    for (int i = 0; i < 26; i++) {
+        if (count[i] != 0) return false;
+    }
+    return true;
+}
+int main() {
+    string s1, s2;
+    cout << "Enter two strings: ";
+    getline(cin, s1);
+    getline(cin, s2);
+    cout << (areAnagrams(s1, s2) ? "Anagrams" : "Not Anagrams") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 3: Write a program for naive pattern matching.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+void findPattern(string text, string pattern) {
+    int n = text.length(), m = pattern.length();
+    for (int i = 0; i <= n - m; i++) {
+        int j;
+        for (j = 0; j < m; j++) {
+            if (text[i + j] != pattern[j]) break;
+        }
+        if (j == m) cout << "Pattern found at index " << i << endl;
+    }
+}
+int main() {
+    string text = "AABAACAADAABAAABAA";
+    string pattern = "AABA";
+    findPattern(text, pattern);
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Linked Lists (Singly, Doubly, Circular, Operations)</h3>
+                <p><strong>Definition:</strong> Linked lists are chains of nodes, each containing data and a pointer to the next node (singly), both directions (doubly), or looping back (circular). Operations include insertion, deletion, and traversal.</p>
+                <p><strong>Real-life Analogy:</strong> Like a train with cars linked one after another (singly), or a two-way shuttle (doubly), or a merry-go-round (circular).</p>
+                <p><strong>Usage:</strong> Used for dynamic data storage, like playlists or undo operations, where size changes frequently.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+int main() {
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    Node* temp = head;
+    while (temp) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>struct Node</code>: Defines a node with data and next pointer.<br>
+                - <code>Node(int val)</code>: Constructor initializes node.<br>
+                - <code>head->next = new Node(2)</code>: Links nodes.<br>
+                - <code>while (temp)</code>: Traverses and prints list.</p>
+                <p><strong>Example 1: Write a program to insert a node at the beginning of a singly linked list.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+void insertAtFront(Node*& head, int val) {
+    Node* newNode = new Node(val);
+    newNode->next = head;
+    head = newNode;
+}
+void printList(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+int main() {
+    Node* head = nullptr;
+    insertAtFront(head, 3);
+    insertAtFront(head, 2);
+    insertAtFront(head, 1);
+    printList(head);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to reverse a singly linked list.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+Node* reverseList(Node* head) {
+    Node *prev = nullptr, *curr = head, *next;
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+void printList(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+int main() {
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head = reverseList(head);
+    printList(head);
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Stack (LIFO, Infix/Postfix, NGE)</h3>
+                <p><strong>Definition:</strong> Stack is a LIFO (Last In, First Out) data structure. Used for infix-to-postfix conversion and problems like Next Greater Element (NGE).</p>
+                <p><strong>Real-life Analogy:</strong> Like a stack of plates—you add or remove from the top only. Infix/postfix is like rearranging sentences, and NGE is like finding the next taller building in a row.</p>
+                <p><strong>Usage:</strong> Used for expression evaluation, backtracking, or finding the next greater element in arrays.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <stack>
+using namespace std;
+int main() {
+    stack<int> s;
+    s.push(1);
+    s.push(2);
+    cout << s.top() << endl; // Top element
+    s.pop();
+    cout << s.top() << endl; // New top
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>stack<int> s</code>: Declares a stack of integers.<br>
+                - <code>s.push(1)</code>: Adds 1 to the top.<br>
+                - <code>s.top()</code>: Returns top element.<br>
+                - <code>s.pop()</code>: Removes top element.</p>
+                <p><strong>Example 1: Write a program to check if parentheses are balanced using a stack.</strong></p>
+                <pre><code>#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+bool isBalanced(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(') st.push(c);
+        else if (c == ')') {
+            if (st.empty()) return false;
+            st.pop();
+        }
+    }
+    return st.empty();
+}
+int main() {
+    string s;
+    cout << "Enter expression: ";
+    getline(cin, s);
+    cout << (isBalanced(s) ? "Balanced" : "Not Balanced") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the Next Greater Element using a stack.</strong></p>
+                <pre><code>#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+void nextGreater(int arr[], int n) {
+    stack<int> s;
+    vector<int> result(n, -1);
+    for (int i = 0; i < n; i++) {
+        while (!s.empty() && arr[i] > arr[s.top()]) {
+            result[s.top()] = arr[i];
+            s.pop();
+        }
+        s.push(i);
+    }
+    for (int x : result) cout << x << " ";
+}
+int main() {
+    int arr[] = {4, 5, 2, 25};
+    int n = 4;
+    nextGreater(arr, n);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Queue (FIFO, Circular Queue, Deque, Applications)</h3>
+                <p><strong>Definition:</strong> Queue is a FIFO (First In, First Out) data structure. Circular queue reuses space, deque allows insertion/deletion at both ends, and applications include task scheduling.</p>
+                <p><strong>Real-life Analogy:</strong> Like a line at a ticket counter—first person gets served first. Circular queue is like a rotating conveyor belt, and deque is like a double-ended counter.</p>
+                <p><strong>Usage:</strong> Used in scheduling, breadth-first search, or buffering data streams.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <queue>
+using namespace std;
+int main() {
+    queue<int> q;
+    q.push(1);
+    q.push(2);
+    cout << q.front() << endl; // Front element
+    q.pop();
+    cout << q.front() << endl; // New front
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>queue<int> q</code>: Declares a queue of integers.<br>
+                - <code>q.push(1)</code>: Adds 1 to the rear.<br>
+                - <code>q.front()</code>: Returns front element.<br>
+                - <code>q.pop()</code>: Removes front element.</p>
+                <p><strong>Example 1: Write a program to implement a simple queue.</strong></p>
+                <pre><code>#include <iostream>
+#include <queue>
+using namespace std;
+int main() {
+    queue<int> q;
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        q.push(x);
+    }
+    cout << "Queue elements: ";
+    while (!q.empty()) {
+        cout << q.front() << " ";
+        q.pop();
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to implement a deque.</strong></p>
+                <pre><code>#include <iostream>
+#include <deque>
+using namespace std;
+int main() {
+    deque<int> dq;
+    dq.push_back(1);
+    dq.push_front(2);
+    cout << "Front: " << dq.front() << endl;
+    cout << "Back: " << dq.back() << endl;
+    dq.pop_front();
+    cout << "New front: " << dq.front() << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

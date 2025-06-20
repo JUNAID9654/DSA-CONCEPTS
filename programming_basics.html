@@ -1,0 +1,700 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Basics - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>1. Programming Basics</h2>
+            <div class="subtopic">
+                <h3>Variables & Data Types</h3>
+                <p><strong>Definition:</strong> Variables are named containers that store data like numbers or text. Data types define what kind of data a variable can hold (e.g., integer, float, character).</p>
+                <p><strong>Real-life Analogy:</strong> Think of variables as labeled jars in a kitchen. Each jar (variable) holds a specific type of ingredient (data type), like sugar (int) or flour (float).</p>
+                <p><strong>Usage:</strong> Variables store values for calculations, user inputs, or program states. Data types ensure the right operations are applied (e.g., math on numbers, concatenation on strings).</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>int num = 10;
+float price = 19.99;
+char grade = 'A';
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int num = 10;</code>: <code>int</code> is the data type for integers, <code>num</code> is the variable name, <code>= 10</code> assigns the value 10.<br>
+                - <code>float price = 19.99;</code>: <code>float</code> is for decimal numbers, <code>price</code> is the variable name, <code>= 19.99</code> assigns a decimal value.<br>
+                - <code>char grade = 'A';</code>: <code>char</code> is for single characters, <code>grade</code> is the variable name, <code>= 'A'</code> assigns a character.</p>
+                <p><strong>Example 1: Write a program to calculate the area of a rectangle.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int length = 5, width = 3;
+    int area = length * width;
+    cout << "Area: " << area << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to convert temperature from Celsius to Fahrenheit.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    float celsius = 25.5;
+    float fahrenheit = (celsius * 9 / 5) + 32;
+    cout << "Fahrenheit: " << fahrenheit << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Input/Output (cin/cout)</h3>
+                <p><strong>Definition:</strong> <code>cin</code> reads user input from the keyboard, and <code>cout</code> displays output on the screen.</p>
+                <p><strong>Real-life Analogy:</strong> <code>cin</code> is like a waiter taking your order, and <code>cout</code> is like the waiter delivering your food to the table.</p>
+                <p><strong>Usage:</strong> Used to interact with users, like taking inputs for calculations or displaying results.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int x;
+    cin >> x;
+    cout << "You entered: " << x << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>#include &lt;iostream&gt;</code>: Includes input/output library.<br>
+                - <code>using namespace std;</code>: Allows using <code>cin</code> and <code>cout</code> without <code>std::</code>.<br>
+                - <code>cin >> x;</code>: Reads input into variable <code>x</code>.<br>
+                - <code>cout << "You entered: " << x << endl;</code>: Prints text and value of <code>x</code>, <code>endl</code> adds a newline.</p>
+                <p><strong>Example 1: Write a program to read and print a user's name.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    string name;
+    cout << "Enter your name: ";
+    getline(cin, name);
+    cout << "Hello, " << name << "!" << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to calculate the sum of two numbers entered by the user.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int a, b;
+    cout << "Enter two numbers: ";
+    cin >> a >> b;
+    cout << "Sum: " << a + b << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Operators (Arithmetic, Logical, Relational)</h3>
+                <p><strong>Definition:</strong> Operators perform operations like addition (+), comparison (==), or logical checks (&&).</p>
+                <p><strong>Real-life Analogy:</strong> Operators are like tools in a toolbox—each has a specific job, like a hammer (arithmetic) or a ruler (comparison).</p>
+                <p><strong>Usage:</strong> Used for calculations, comparisons, and logical decisions in programs.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>int a = 10, b = 5;
+int sum = a + b; // Arithmetic
+bool isEqual = (a == b); // Relational
+bool result = (a > 0 && b > 0); // Logical
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>a + b</code>: Adds two numbers (arithmetic).<br>
+                - <code>a == b</code>: Checks if <code>a</code> equals <code>b</code> (relational).<br>
+                - <code>a > 0 && b > 0</code>: Checks if both conditions are true (logical).</p>
+                <p><strong>Example 1: Write a program to check if a number is positive and even.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int num;
+    cout << "Enter a number: ";
+    cin >> num;
+    if (num > 0 && num % 2 == 0)
+        cout << "Positive and even" << endl;
+    else
+        cout << "Not positive or not even" << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to perform arithmetic operations on two numbers.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int a, b;
+    cout << "Enter two numbers: ";
+    cin >> a >> b;
+    cout << "Sum: " << a + b << endl;
+    cout << "Difference: " << a - b << endl;
+    cout << "Product: " << a * b << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Conditional Statements (if, if-else, switch-case)</h3>
+                <p><strong>Definition:</strong> Conditional statements control program flow based on conditions, like choosing paths based on decisions.</p>
+                <p><strong>Real-life Analogy:</strong> Like choosing what to wear based on the weather—if it’s raining, take an umbrella; else, wear sunglasses.</p>
+                <p><strong>Usage:</strong> Used to make decisions, like validating input or selecting options.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int x;
+    cin >> x;
+    if (x > 0) {
+        cout << "Positive";
+    } else if (x < 0) {
+        cout << "Negative";
+    } else {
+        cout << "Zero";
+    }
+    switch (x) {
+        case 1: cout << "One"; break;
+        default: cout << "Other"; break;
+    }
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>if (x > 0)</code>: Checks if <code>x</code> is positive.<br>
+                - <code>else if (x < 0)</code>: Checks if <code>x</code> is negative if not positive.<br>
+                - <code>switch (x)</code>: Selects a case based on <code>x</code>’s value.<br>
+                - <code>break</code>: Exits the switch block.</p>
+                <p><strong>Example 1: Write a program to check if a number is even or odd.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int num;
+    cout << "Enter a number: ";
+    cin >> num;
+    if (num % 2 == 0)
+        cout << "Even" << endl;
+    else
+        cout << "Odd" << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to print the day of the week using switch.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int day;
+    cout << "Enter day (1-7): ";
+    cin >> day;
+    switch (day) {
+        case 1: cout << "Monday"; break;
+        case 2: cout << "Tuesday"; break;
+        default: cout << "Invalid"; break;
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Loops (for, while, do-while)</h3>
+                <p><strong>Definition:</strong> Loops repeat a block of code until a condition is met, like repeating a task multiple times.</p>
+                <p><strong>Real-life Analogy:</strong> Like doing laps around a track—you keep running until you’ve completed the set number of laps.</p>
+                <p><strong>Usage:</strong> Used to iterate over arrays, perform repetitive tasks, or process input until valid.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    for (int i = 0; i < 5; i++) {
+        cout << i << " ";
+    }
+    int j = 0;
+    while (j < 5) {
+        cout << j << " ";
+        j++;
+    }
+    int k = 0;
+    do {
+        cout << k << " ";
+        k++;
+    } while (k < 5);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 0; i < 5; i++)</code>: Initializes <code>i</code>, checks condition, increments <code>i</code>.<br>
+                - <code>while (j < 5)</code>: Runs while condition is true.<br>
+                - <code>do { ... } while (k < 5);</code>: Runs at least once, then checks condition.</p>
+                <p><strong>Example 1: Write a program to print the first 10 numbers.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    for (int i = 1; i <= 10; i++) {
+        cout << i << " ";
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to sum numbers until user enters 0.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int num, sum = 0;
+    do {
+        cout << "Enter a number (0 to stop): ";
+        cin >> num;
+        sum += num;
+    } while (num != 0);
+    cout << "Sum: " << sum << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Functions (with parameters & return types)</h3>
+                <p><strong>Definition:</strong> Functions are reusable blocks of code that perform a specific task, often taking inputs (parameters) and returning outputs.</p>
+                <p><strong>Real-life Analogy:</strong> Like a chef’s recipe—give ingredients (parameters), and get a dish (return value).</p>
+                <p><strong>Usage:</strong> Used to modularize code, reduce repetition, and improve readability.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int add(int a, int b) {
+    return a + b;
+}
+int main() {
+    int result = add(3, 4);
+    cout << "Sum: " << result << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int add(int a, int b)</code>: Defines a function <code>add</code> that takes two integers and returns an integer.<br>
+                - <code>return a + b;</code>: Returns the sum.<br>
+                - <code>int result = add(3, 4);</code>: Calls the function with arguments 3 and 4.</p>
+                <p><strong>Example 1: Write a program to find the square of a number using a function.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int square(int n) {
+    return n * n;
+}
+int main() {
+    int num;
+    cout << "Enter a number: ";
+    cin >> num;
+    cout << "Square: " << square(num) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to check if a number is prime using a function.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+bool isPrime(int n) {
+    if (n <= 1) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+int main() {
+    int num;
+    cout << "Enter a number: ";
+    cin >> num;
+    cout << (isPrime(num) ? "Prime" : "Not Prime") << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Arrays (1D, 2D)</h3>
+                <p><strong>Definition:</strong> Arrays are collections of elements of the same type stored in contiguous memory, accessed by index.</p>
+                <p><strong>Real-life Analogy:</strong> Like a row of lockers, each holding one item, accessed by locker number.</p>
+                <p><strong>Usage:</strong> Used to store multiple values, like lists of numbers or a matrix for computations.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5}; // 1D array
+    int matrix[2][3] = {{1, 2, 3}, {4, 5, 6}}; // 2D array
+    cout << arr[0] << " " << matrix[1][2] << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int arr[5]</code>: Declares a 1D array of 5 integers.<br>
+                - <code>int matrix[2][3]</code>: Declares a 2D array with 2 rows, 3 columns.<br>
+                - <code>arr[0]</code>: Accesses first element of 1D array.<br>
+                - <code>matrix[1][2]</code>: Accesses element in row 2, column 3.</p>
+                <p><strong>Example 1: Write a program to find the sum of elements in a 1D array.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    int sum = 0;
+    for (int i = 0; i < 5; i++) {
+        sum += arr[i];
+    }
+    cout << "Sum: " << sum << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to print a 2D matrix.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int matrix[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Strings (character arrays, string class)</h3>
+                <p><strong>Definition:</strong> Strings are sequences of characters, either as character arrays or using the <code>string</code> class for easier manipulation.</p>
+                <p><strong>Real-life Analogy:</strong> Like a sentence written on a whiteboard (character array) or typed in a text editor (<code>string</code> class).</p>
+                <p><strong>Usage:</strong> Used for text processing, like user names, messages, or pattern matching.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    char str[10] = "Hello";
+    string s = "World";
+    cout << str << " " << s << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>char str[10] = "Hello";</code>: Character array storing "Hello".<br>
+                - <code>string s = "World";</code>: <code>string</code> class object storing "World".<br>
+                - <code>cout << str << " " << s;</code>: Prints both strings.</p>
+                <p><strong>Example 1: Write a program to reverse a string using the string class.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    string s;
+    cout << "Enter a string: ";
+    getline(cin, s);
+    string rev = "";
+    for (int i = s.length() - 1; i >= 0; i--) {
+        rev += s[i];
+    }
+    cout << "Reversed: " << rev << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count vowels in a character array.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    char str[100];
+    cout << "Enter a string: ";
+    cin.getline(str, 100);
+    int vowels = 0;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == 'a' || str[i] == 'e' || str[i] == 'i' || str[i] == 'o' || str[i] == 'u')
+            vowels++;
+    }
+    cout << "Vowels: " << vowels << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Pointers & References</h3>
+                <p><strong>Definition:</strong> Pointers store memory addresses of variables, and references are aliases for existing variables.</p>
+                <p><strong>Real-life Analogy:</strong> A pointer is like a house address, pointing to where the data lives. A reference is like a nickname for a person.</p>
+                <p><strong>Usage:</strong> Used for dynamic memory management, passing variables to functions, or accessing array elements efficiently.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int x = 10;
+    int* ptr = &x; // Pointer
+    int& ref = x; // Reference
+    cout << *ptr << " " << ref << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int* ptr = &x;</code>: <code>ptr</code> stores address of <code>x</code>.<br>
+                - <code>&x</code>: Gets address of <code>x</code>.<br>
+                - <code>*ptr</code>: Accesses value at address stored in <code>ptr</code>.<br>
+                - <code>int& ref = x;</code>: <code>ref</code> is an alias for <code>x</code>.</p>
+                <p><strong>Example 1: Write a program to swap two numbers using pointers.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+int main() {
+    int x = 5, y = 10;
+    cout << "Before: " << x << " " << y << endl;
+    swap(&x, &y);
+    cout << "After: " << x << " " << y << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to increment a number using a reference.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+void increment(int& n) {
+    n++;
+}
+int main() {
+    int x = 5;
+    cout << "Before: " << x << endl;
+    increment(x);
+    cout << "After: " << x << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Recursion</h3>
+                <p><strong>Definition:</strong> Recursion is when a function calls itself to solve smaller instances of the same problem.</p>
+                <p><strong>Real-life Analogy:</strong> Like opening a set of nested boxes—each box contains a smaller box until you reach the smallest one.</p>
+                <p><strong>Usage:</strong> Used for problems like factorial, Fibonacci, or tree traversals where breaking down into smaller problems is easier.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+int main() {
+    cout << factorial(5) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>if (n <= 1) return 1;</code>: Base case to stop recursion.<br>
+                - <code>return n * factorial(n - 1);</code>: Recursive call with smaller input.<br>
+                - <code>factorial(5)</code>: Computes 5 * 4 * 3 * 2 * 1.</p>
+                <p><strong>Example 1: Write a program to calculate factorial using recursion.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << "Factorial: " << factorial(n) << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to print Fibonacci numbers using recursion.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+int fib(int n) {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+}
+int main() {
+    int n;
+    cout << "Enter n: ";
+    cin >> n;
+    cout << "Fibonacci: " << fib(n) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>STL Basics (vector, pair, map, set)</h3>
+                <p><strong>Definition:</strong> The Standard Template Library (STL) provides containers like <code>vector</code> (dynamic array), <code>pair</code> (two elements), <code>map</code> (key-value pairs), and <code>set</code> (unique elements).</p>
+                <p><strong>Real-life Analogy:</strong> STL containers are like different types of organizers: a <code>vector</code> is a flexible list, a <code>pair</code> is a two-slot holder, a <code>map</code> is a dictionary, and a <code>set</code> is a unique-item collection.</p>
+                <p><strong>Usage:</strong> Used to store and manipulate data efficiently without implementing data structures from scratch.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;utility&gt;
+#include &lt;map&gt;
+#include &lt;set&gt;
+using namespace std;
+int main() {
+    vector<int> v = {1, 2, 3};
+    pair<int, string> p = {1, "one"};
+    map<int, string> m = {{1, "one"}, {2, "two"}};
+    set<int> s = {1, 2, 2};
+    cout << v[0] << " " << p.second << " " << m[1] << " " << *s.begin() << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>vector<int> v</code>: Dynamic array of integers.<br>
+                - <code>pair<int, string> p</code>: Stores an integer and string.<br>
+                - <code>map<int, string> m</code>: Stores key-value pairs.<br>
+                - <code>set<int> s</code>: Stores unique integers.<br>
+                - <code>*s.begin()</code>: Accesses first element in <code>set</code>.</p>
+                <p><strong>Example 1: Write a program to store and print elements using a vector.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+int main() {
+    vector<int> v;
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        v.push_back(x);
+    }
+    cout << "Elements: ";
+    for (int x : v) {
+        cout << x << " ";
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count frequency of numbers using a map.</strong></p>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;map&gt;
+using namespace std;
+int main() {
+    map<int, int> freq;
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        freq[x]++;
+    }
+    for (auto p : freq) {
+        cout << p.first << ": " << p.second << endl;
+    }
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete DSA Learning Roadmap Flowchart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f7f3e9 0%, #ede4d3 50%, #e8dcc6 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+        }
+
+        .level {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 320px;
+            max-width: 380px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            border: 3px solid transparent;
+            color: white;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: #3498db;
+        }
+
+        .topic-card.basics { border-left: 5px solid #4CAF50; }
+        .topic-card.logic { border-left: 5px solid #FF9800; }
+        .topic-card.linear { border-left: 5px solid #2196F3; }
+        .topic-card.nonlinear { border-left: 5px solid #9C27B0; }
+        .topic-card.searching { border-left: 5px solid #00BCD4; }
+        .topic-card.sorting { border-left: 5px solid #8BC34A; }
+        .topic-card.techniques { border-left: 5px solid #FF5722; }
+        .topic-card.algorithms { border-left: 5px solid #F44336; }
+        .topic-card.advanced { border-left: 5px solid #795548; }
+        .topic-card.practice { border-left: 5px solid #607D8B; }
+
+        .topic-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .topic-emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .topic-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ecf0f1;
+            flex: 1;
+        }
+
+        .topic-content {
+            color: #bdc3c7;
+            line-height: 1.5;
+        }
+
+        .subtopic-group {
+            margin-bottom: 15px;
+        }
+
+        .subtopic-header {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .subtopic-header::before {
+            content: "✅";
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+
+        .subtopic {
+            margin: 4px 0;
+            padding: 6px 12px;
+            background: rgba(52, 73, 94, 0.6);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            color: #ecf0f1;
+        }
+
+        .subtopic:hover {
+            background: rgba(52, 73, 94, 0.8);
+            border-left-color: #3498db;
+            transform: translateX(3px);
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid rgba(44, 62, 80, 0.7);
+            margin: 10px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .level-indicator {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.1rem;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #FF6B6B;
+            color: white;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-badge.easy { background: #4CAF50; }
+        .difficulty-badge.medium { background: #FF9800; }
+        .difficulty-badge.hard { background: #F44336; }
+
+        .expandable {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .expandable::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .expandable::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .expandable::-webkit-scrollbar-thumb {
+            background: rgba(52, 73, 94, 0.8);
+            border-radius: 4px;
+        }
+
+        .technique-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        @media (max-width: 1200px) {
+            .level {
+                gap: 20px;
+            }
+            
+            .topic-card {
+                min-width: 300px;
+                max-width: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .level {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .topic-card {
+                min-width: 280px;
+                max-width: 100%;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">📚 Complete DSA Learning Roadmap</h1>
+        
+        <div class="flowchart">
+            <!-- Level 1: Programming Basics -->
+            <div class="level">
+                <div class="level-indicator">🟢 Foundation Level - Start Here</div>
+            </div>
+            <div class="level">
+                <div class="topic-card basics">
+                    <div class="difficulty-badge easy">1</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🟢</span>
+                        <span class="topic-title">Programming Basics</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic">Variables & Data Types</div>
+                        <div class="subtopic">Input/Output (cin/cout)</div>
+                        <div class="subtopic">Operators (Arithmetic, Logical, Relational)</div>
+                        <div class="subtopic">Conditional Statements: if, if-else, switch-case</div>
+                        <div class="subtopic">Loops: for, while, do-while</div>
+                        <div class="subtopic">Functions (with parameters & return types)</div>
+                        <div class="subtopic">Arrays (1D, 2D)</div>
+                        <div class="subtopic">Strings (character arrays, string class)</div>
+                        <div class="subtopic">Pointers & References</div>
+                        <div class="subtopic">Recursion</div>
+                        <div class="subtopic">STL Basics: vector, pair, map, set</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 2: Logic Building -->
+            <div class="level">
+                <div class="topic-card logic">
+                    <div class="difficulty-badge easy">2</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🧠</span>
+                        <span class="topic-title">Logic Building + Complexity</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic">Dry Run Skills: Step-by-step tracing</div>
+                        <div class="subtopic">Mathematics + Patterns</div>
+                        <div class="subtopic">Bit Manipulation</div>
+                        <div class="subtopic">Time & Space Complexity</div>
+                        <div class="subtopic">Big O Notation</div>
+                        <div class="subtopic">Worst/Average/Best Case</div>
+                        <div class="subtopic">Constant vs Logarithmic vs Linear</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 3: Linear Data Structures -->
+            <div class="level">
+                <div class="level-indicator">📦 Data Structures Level</div>
+            </div>
+            <div class="level">
+                <div class="topic-card linear">
+                    <div class="difficulty-badge medium">3</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">📦</span>
+                        <span class="topic-title">Linear Data Structures</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Arrays</div>
+                            <div class="subtopic">Static, Dynamic</div>
+                            <div class="subtopic">Operations: Insertion, Deletion, Traversal</div>
+                            <div class="subtopic">Sliding Window</div>
+                            <div class="subtopic">Prefix Sum</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Strings</div>
+                            <div class="subtopic">Palindrome, Anagram</div>
+                            <div class="subtopic">Pattern Matching (Naive/KMP)</div>
+                            <div class="subtopic">String Manipulation</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Linked Lists</div>
+                            <div class="subtopic">Singly Linked List</div>
+                            <div class="subtopic">Doubly Linked List</div>
+                            <div class="subtopic">Circular Linked List</div>
+                            <div class="subtopic">Operations: insert, delete, reverse, detect loop</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Stack (LIFO)</div>
+                            <div class="subtopic">Implementation using array & linked list</div>
+                            <div class="subtopic">Applications: Balanced Parentheses, NGE, Infix to Postfix</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Queue (FIFO)</div>
+                            <div class="subtopic">Implementation using array & linked list</div>
+                            <div class="subtopic">Circular Queue</div>
+                            <div class="subtopic">Deque (Double-Ended Queue)</div>
+                            <div class="subtopic">Applications: Sliding Window Maximum, LRU Cache</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 4: Non-Linear Data Structures -->
+            <div class="level">
+                <div class="topic-card nonlinear">
+                    <div class="difficulty-badge medium">4</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🌲</span>
+                        <span class="topic-title">Non-Linear Data Structures</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Trees</div>
+                            <div class="subtopic">Binary Tree</div>
+                            <div class="subtopic">Traversals: Inorder, Preorder, Postorder, Level Order</div>
+                            <div class="subtopic">Binary Search Tree (BST)</div>
+                            <div class="subtopic">Insert, Search, Delete</div>
+                            <div class="subtopic">AVL Tree</div>
+                            <div class="subtopic">Segment Tree (Range Queries)</div>
+                            <div class="subtopic">Trie (Prefix Tree)</div>
+                            <div class="subtopic">Red-Black Tree</div>
+                            <div class="subtopic">Binary Indexed Tree (Fenwick Tree)</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Heaps</div>
+                            <div class="subtopic">Min-Heap / Max-Heap</div>
+                            <div class="subtopic">Heapify, Heap Sort</div>
+                            <div class="subtopic">Priority Queue</div>
+                            <div class="subtopic">Applications: Kth Largest, Top K Frequent</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Graphs</div>
+                            <div class="subtopic">Representation: Adjacency List, Adjacency Matrix</div>
+                            <div class="subtopic">Traversal: BFS (Breadth-First Search)</div>
+                            <div class="subtopic">DFS (Depth-First Search)</div>
+                            <div class="subtopic">Detect Cycles (Directed & Undirected)</div>
+                            <div class="subtopic">Connected Components</div>
+                            <div class="subtopic">Dijkstra's Algorithm</div>
+                            <div class="subtopic">Bellman-Ford</div>
+                            <div class="subtopic">Floyd Warshall</div>
+                            <div class="subtopic">Topological Sort</div>
+                            <div class="subtopic">MST (Kruskal's, Prim's)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 5: Searching Algorithms -->
+            <div class="level">
+                <div class="level-indicator">🔍 Algorithms Level</div>
+            </div>
+            <div class="level">
+                <div class="topic-card searching">
+                    <div class="difficulty-badge medium">5</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🔍</span>
+                        <span class="topic-title">Searching Algorithms</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic">Linear Search</div>
+                        <div class="subtopic">Binary Search</div>
+                        <div class="subtopic">Ternary Search</div>
+                        <div class="subtopic">Binary Search on Answer (Advanced)</div>
+                        <div class="subtopic">Search in Rotated Sorted Array</div>
+                        <div class="subtopic">Lower Bound / Upper Bound (STL)</div>
+                        <div class="subtopic">Exponential Search</div>
+                        <div class="subtopic">Interpolation Search</div>
+                    </div>
+                </div>
+                
+                <div class="topic-card sorting">
+                    <div class="difficulty-badge medium">6</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🔃</span>
+                        <span class="topic-title">Sorting Algorithms</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Basic Sorting</div>
+                            <div class="subtopic">Bubble Sort</div>
+                            <div class="subtopic">Selection Sort</div>
+                            <div class="subtopic">Insertion Sort</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Advanced Sorting</div>
+                            <div class="subtopic">Merge Sort (Divide & Conquer)</div>
+                            <div class="subtopic">Quick Sort</div>
+                            <div class="subtopic">Heap Sort</div>
+                            <div class="subtopic">Counting Sort</div>
+                            <div class="subtopic">Radix Sort</div>
+                            <div class="subtopic">Bucket Sort</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 6: Techniques & Approaches -->
+            <div class="level">
+                <div class="topic-card techniques technique-card">
+                    <div class="difficulty-badge medium">7</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🧰</span>
+                        <span class="topic-title">Techniques & Approaches</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Two Pointer Technique</div>
+                            <div class="subtopic">Pair Sum</div>
+                            <div class="subtopic">Trapping Rain Water</div>
+                            <div class="subtopic">Container With Most Water</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Sliding Window</div>
+                            <div class="subtopic">Maximum Sum Subarray</div>
+                            <div class="subtopic">Longest Substring Without Repeat</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Prefix Sum / Difference Array</div>
+                            <div class="subtopic">Subarray Sum</div>
+                            <div class="subtopic">Range Updates</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Recursion & Backtracking</div>
+                            <div class="subtopic">Factorial, Fibonacci, Tower of Hanoi</div>
+                            <div class="subtopic">Sudoku Solver</div>
+                            <div class="subtopic">N-Queens</div>
+                            <div class="subtopic">Subset Generation</div>
+                            <div class="subtopic">Permutations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 7: Core Algorithms -->
+            <div class="level">
+                <div class="topic-card algorithms">
+                    <div class="difficulty-badge hard">8</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">💡</span>
+                        <span class="topic-title">Core Algorithms</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Greedy</div>
+                            <div class="subtopic">Activity Selection</div>
+                            <div class="subtopic">Fractional Knapsack</div>
+                            <div class="subtopic">Huffman Encoding</div>
+                            <div class="subtopic">Job Scheduling</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Divide and Conquer</div>
+                            <div class="subtopic">Merge Sort</div>
+                            <div class="subtopic">Quick Sort</div>
+                            <div class="subtopic">Binary Search</div>
+                            <div class="subtopic">Closest Pair of Points</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Dynamic Programming</div>
+                            <div class="subtopic">Memoization & Tabulation</div>
+                            <div class="subtopic">0/1 Knapsack</div>
+                            <div class="subtopic">Longest Common Subsequence</div>
+                            <div class="subtopic">Longest Increasing Subsequence</div>
+                            <div class="subtopic">Matrix Chain Multiplication</div>
+                            <div class="subtopic">DP on Trees / DP on Grids</div>
+                            <div class="subtopic">DP with Bitmasking</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Bit Manipulation</div>
+                            <div class="subtopic">Check Odd/Even</div>
+                            <div class="subtopic">Count Set Bits</div>
+                            <div class="subtopic">XOR Problems</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 8: Advanced Topics -->
+            <div class="level">
+                <div class="level-indicator">🔁 Advanced Level</div>
+            </div>
+            <div class="level">
+                <div class="topic-card advanced">
+                    <div class="difficulty-badge hard">9</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🔁</span>
+                        <span class="topic-title">Advanced Topics</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Hashing</div>
+                            <div class="subtopic">Hash Maps / Sets</div>
+                            <div class="subtopic">Collision Resolution</div>
+                            <div class="subtopic">Frequency Count Problems</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Trie (Prefix Tree)</div>
+                            <div class="subtopic">Auto-Complete</div>
+                            <div class="subtopic">Word Dictionary</div>
+                            <div class="subtopic">Prefix Matching</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Segment Tree</div>
+                            <div class="subtopic">Range Query + Updates</div>
+                            <div class="subtopic">Lazy Propagation</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Binary Indexed Tree (Fenwick Tree)</div>
+                            <div class="subtopic">Efficient range sums & point updates</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Disjoint Set Union (DSU)</div>
+                            <div class="subtopic">Union-Find</div>
+                            <div class="subtopic">Cycle Detection in Graph</div>
+                            <div class="subtopic">Kruskal's Algorithm</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Graph Algorithms</div>
+                            <div class="subtopic">Shortest Paths</div>
+                            <div class="subtopic">Topo Sort</div>
+                            <div class="subtopic">Union-Find</div>
+                            <div class="subtopic">Network Flow (Ford Fulkerson)</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Geometry Algorithms</div>
+                            <div class="subtopic">Line Intersection</div>
+                            <div class="subtopic">Convex Hull</div>
+                        </div>
+                        <div class="subtopic-group">
+                            <div class="subtopic-header">Randomized Algorithms</div>
+                            <div class="subtopic">QuickSelect</div>
+                            <div class="subtopic">Reservoir Sampling</div>
+                            <div class="subtopic">Monte Carlo / Las Vegas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow"></div>
+            
+            <!-- Level 9: Interview & Practice -->
+            <div class="level">
+                <div class="level-indicator">🎓 Mastery Level</div>
+            </div>
+            <div class="level">
+                <div class="topic-card practice">
+                    <div class="difficulty-badge hard">10</div>
+                    <div class="topic-header">
+                        <span class="topic-emoji">🎓</span>
+                        <span class="topic-title">Interview & Practice Focus Areas</span>
+                    </div>
+                    <div class="topic-content expandable">
+                        <div class="subtopic">Arrays & Strings</div>
+                        <div class="subtopic">Sliding Window</div>
+                        <div class="subtopic">Hashing & Maps</div>
+                        <div class="subtopic">Stack/Queue</div>
+                        <div class="subtopic">Two Pointers</div>
+                        <div class="subtopic">Linked Lists</div>
+                        <div class="subtopic">Trees & BST</div>
+                        <div class="subtopic">Recursion + Backtracking</div>
+                        <div class="subtopic">DP</div>
+                        <div class="subtopic">Greedy + Graphs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity to cards
+        document.querySelectorAll('.topic-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 200);
+            });
+        });
+
+        // Add hover effects for subtopics
+        document.querySelectorAll('.subtopic').forEach(subtopic => {
+            subtopic.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.fontWeight = '500';
+            });
+            
+            subtopic.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.fontWeight = 'normal';
+            });
+        });
+
+        // Add click to copy functionality for subtopics
+        document.querySelectorAll('.subtopic').forEach(subtopic => {
+            subtopic.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navigator.clipboard.writeText(this.textContent).then(() => {
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

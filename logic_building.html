@@ -1,0 +1,446 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Building & Complexity - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>2. Logic Building & Complexity</h2>
+            <div class="subtopic">
+                <h3>Dry Run Skills</h3>
+                <p><strong>Definition:</strong> Dry running is manually tracing a program’s execution step-by-step to understand its logic and predict output without running it on a computer.</p>
+                <p><strong>Real-life Analogy:</strong> Like following a recipe in your head, imagining each step (chop, mix, bake) to ensure you understand the process before cooking.</p>
+                <p><strong>Usage:</strong> Helps debug code, verify logic, and understand how variables change during execution, especially in loops and conditionals.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int sum = 0;
+    for (int i = 1; i <= 3; i++) {
+        sum += i;
+    }
+    cout << sum << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>int sum = 0;</code>: Initializes <code>sum</code> to 0.<br>
+                - <code>for (int i = 1; i <= 3; i++)</code>: Loop runs for <code>i = 1, 2, 3</code>.<br>
+                - <code>sum += i;</code>: Adds <code>i</code> to <code>sum</code> each iteration.<br>
+                - Dry run: <code>i=1, sum=0+1=1</code>; <code>i=2, sum=1+2=3</code>; <code>i=3, sum=3+3=6</code>.<br>
+                - <code>cout << sum;</code>: Outputs 6.</p>
+                <p><strong>Example 1: Write a program to find the sum of first n numbers and dry run it.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int n = 4, sum = 0;
+    for (int i = 1; i <= n; i++) {
+        sum += i;
+    }
+    cout << "Sum: " << sum << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Dry run: <br>
+                - Initialize: <code>n=4, sum=0</code>.<br>
+                - <code>i=1</code>: <code>sum=0+1=1</code>.<br>
+                - <code>i=2</code>: <code>sum=1+2=3</code>.<br>
+                - <code>i=3</code>: <code>sum=3+3=6</code>.<br>
+                - <code>i=4</code>: <code>sum=6+4=10</code>.<br>
+                - Output: 10.</p>
+                <p><strong>Example 2: Write a program to reverse a number and dry run it.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int num = 123, rev = 0;
+    while (num > 0) {
+        int digit = num % 10;
+        rev = rev * 10 + digit;
+        num /= 10;
+    }
+    cout << "Reversed: " << rev << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Dry run: <br>
+                - Initialize: <code>num=123, rev=0</code>.<br>
+                - First: <code>digit=123%10=3</code>, <code>rev=0*10+3=3</code>, <code>num=123/10=12</code>.<br>
+                - Second: <code>digit=12%10=2</code>, <code>rev=3*10+2=32</code>, <code>num=12/10=1</code>.<br>
+                - Third: <code>digit=1%10=1</code>, <code>rev=32*10+1=321</code>, <code>num=1/10=0</code>.<br>
+                - Output: 321.</p>
+            </div>
+            <div class="subtopic">
+                <h3>Mathematics & Patterns</h3>
+                <p><strong>Definition:</strong> Using mathematical concepts (e.g., modular arithmetic, GCD) and pattern recognition to solve problems or generate sequences.</p>
+                <p><strong>Real-life Analogy:</strong> Like solving a puzzle by recognizing repeating shapes or calculating ingredients for a recipe scaled to more servings.</p>
+                <p><strong>Usage:</strong> Used in problems like finding GCD, generating number patterns, or optimizing calculations in algorithms.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+int main() {
+    int a = 48, b = 18;
+    cout << "GCD: " << gcd(a, b) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>gcd(int a, int b)</code>: Recursive function to find GCD using Euclidean algorithm.<br>
+                - <code>if (b == 0) return a;</code>: Base case when remainder is 0.<br>
+                - <code>return gcd(b, a % b);</code>: Recursive call with <code>b</code> and remainder.<br>
+                - Example: <code>gcd(48, 18) -> gcd(18, 12) -> gcd(12, 6) -> gcd(6, 0) = 6</code>.</p>
+                <p><strong>Example 1: Write a program to print a Fibonacci sequence up to n terms.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cout << "Enter number of terms: ";
+    cin >> n;
+    int a = 0, b = 1;
+    cout << "Fibonacci: ";
+    for (int i = 0; i < n; i++) {
+        cout << a << " ";
+        int next = a + b;
+        a = b;
+        b = next;
+    }
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to print a triangular number pattern.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int n = 4;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            cout << j << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Bit Manipulation</h3>
+                <p><strong>Definition:</strong> Bit manipulation involves using bitwise operators (AND, OR, XOR, shift) to perform operations on binary representations of numbers.</p>
+                <p><strong>Real-life Analogy:</strong> Like flipping switches in a control panel to turn features on or off, where each switch represents a bit.</p>
+                <p><strong>Usage:</strong> Used for optimizing space, performing fast arithmetic, or solving problems like finding unique elements.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int main() {
+    int a = 5, b = 3; // a = 0101, b = 0011
+    cout << (a & b) << endl; // AND: 0001 = 1
+    cout << (a | b) << endl; // OR: 0111 = 7
+    cout << (a ^ b) << endl; // XOR: 0110 = 6
+    cout << (a << 1) << endl; // Left shift: 1010 = 10
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>a & b</code>: Bitwise AND, sets bit to 1 if both bits are 1.<br>
+                - <code>a | b</code>: Bitwise OR, sets bit to 1 if either bit is 1.<br>
+                - <code>a ^ b</code>: Bitwise XOR, sets bit to 1 if bits differ.<br>
+                - <code>a << 1</code>: Left shift, shifts bits left, multiplies by 2.</p>
+                <p><strong>Example 1: Write a program to check if a number is a power of 2.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isPowerOfTwo(int n) {
+    if (n <= 0) return false;
+    return (n & (n - 1)) == 0;
+}
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << (isPowerOfTwo(n) ? "Power of 2" : "Not a power of 2") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count set bits in a number.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int countSetBits(int n) {
+    int count = 0;
+    while (n) {
+        count += n & 1;
+        n >>= 1;
+    }
+    return count;
+}
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << "Set bits: " << countSetBits(n) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Time & Space Complexity</h3>
+                <p><strong>Definition:</strong> Time complexity measures how long an algorithm takes to run, and space complexity measures how much memory it uses, both as a function of input size.</p>
+                <p><strong>Real-life Analogy:</strong> Like estimating how long it takes to cook a meal (time) and how much kitchen space you need (space) based on the number of ingredients.</p>
+                <p><strong>Usage:</strong> Used to evaluate and compare algorithms for efficiency, ensuring scalability for large inputs.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void linear(int arr[], int n) { // O(n) time, O(1) space
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+}
+void quadratic(int arr[], int n) { // O(n^2) time, O(1) space
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << arr[i] + arr[j] << " ";
+        }
+    }
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>linear</code>: Single loop, time complexity O(n), constant space O(1).<br>
+                - <code>quadratic</code>: Nested loops, time complexity O(n^2), constant space O(1).</p>
+                <p><strong>Example 1: Write a program to find the maximum element in an array and analyze its complexity.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int findMax(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max) max = arr[i];
+    }
+    return max;
+}
+int main() {
+    int arr[] = {3, 7, 2, 9, 1};
+    int n = 5;
+    cout << "Maximum: " << findMax(arr, n) << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Complexity: Time O(n) (single loop), Space O(1) (only max variable).</p>
+                <p><strong>Example 2: Write a program to print all pairs in an array and analyze its complexity.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void printPairs(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << arr[i] << "," << arr[j] << " ";
+        }
+    }
+}
+int main() {
+    int arr[] = {1, 2, 3};
+    int n = 3;
+    printPairs(arr, n);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Complexity: Time O(n^2) (nested loops), Space O(1) (no extra space).</p>
+            </div>
+            <div class="subtopic">
+                <h3>Big O, Best/Worst/Average Case</h3>
+                <p><strong>Definition:</strong> Big O notation describes the upper bound of an algorithm’s time or space complexity. Best, worst, and average cases describe performance under different input conditions.</p>
+                <p><strong>Real-life Analogy:</strong> Like estimating travel time: best case (no traffic), worst case (heavy traffic), average case (typical traffic).</p>
+                <p><strong>Usage:</strong> Helps predict algorithm performance for different input scenarios, guiding optimization choices.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) return i;
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {5, 3, 8, 4, 2};
+    int key = 8;
+    cout << "Index: " << linearSearch(arr, n, key) << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - Best case: O(1) if key is at index 0.<br>
+                - Worst case: O(n) if key is at the end or not found.<br>
+                - Average case: O(n/2) ≈ O(n) for random inputs.</p>
+                <p><strong>Example 1: Write a program for linear search and analyze its cases.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) return i;
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {10, 20, 30, 40, 50};
+    int n = 5, key;
+    cout << "Enter key to search: ";
+    cin >> key;
+    int result = linearSearch(arr, n, key);
+    cout << (result == -1 ? "Not found" : "Found at index ") << result << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Complexity: <br>
+                - Best: O(1) (key at start).<br>
+                - Worst: O(n) (key at end or absent).<br>
+                - Average: O(n) (key in middle on average).</p>
+                <p><strong>Example 2: Write a program to check if an array is sorted and analyze its cases.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isSorted(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < arr[i-1]) return false;
+    }
+    return true;
+}
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int n = 5;
+    cout << (isSorted(arr, n) ? "Sorted" : "Not sorted") << endl;
+    return 0;
+}
+</code></pre>
+                <p class="note">Complexity: <br>
+                - Best: O(1) (unsorted at i=1).<br>
+                - Worst: O(n) (sorted, checks all elements).<br>
+                - Average: O(n) (checks half on average).</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

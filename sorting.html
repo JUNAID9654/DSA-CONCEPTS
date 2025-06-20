@@ -1,0 +1,1007 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithms - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>6. Sorting Algorithms</h2>
+            <div class="subtopic">
+                <h3>Bubble Sort</h3>
+                <p><strong>Definition:</strong> Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order, pushing larger elements to the end.</p>
+                <p><strong>Real-life Analogy:</strong> Like arranging books on a shelf by repeatedly swapping adjacent books if they are out of order, until all books are sorted.</p>
+                <p><strong>Usage:</strong> Used for small datasets or educational purposes due to its simplicity, though inefficient for large data.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+int main() {
+    int arr[] = {64, 34, 25, 12, 22};
+    int n = 5;
+    bubbleSort(arr, n);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 0; i < n - 1; i++)</code>: Iterates n-1 times to ensure sorting.<br>
+                - <code>for (int j = 0; j < n - i - 1; j++)</code>: Compares adjacent elements.<br>
+                - <code>if (arr[j] > arr[j + 1])</code>: Swaps if current element is larger.<br>
+                - <code>swap(arr[j], arr[j + 1])</code>: Exchanges elements.<br>
+                - Time Complexity: O(n²), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to implement bubble sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    bubbleSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to optimize bubble sort with a flag.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break;
+    }
+}
+int main() {
+    int arr[] = {64, 34, 25, 12, 22};
+    int n = 5;
+    bubbleSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Selection Sort</h3>
+                <p><strong>Definition:</strong> Selection Sort repeatedly finds the minimum element from the unsorted portion and places it at the beginning of the sorted portion.</p>
+                <p><strong>Real-life Analogy:</strong> Like picking the smallest item from a pile and placing it in order, repeating until the pile is sorted.</p>
+                <p><strong>Usage:</strong> Used for small datasets or when minimizing swaps is important, though inefficient for large data.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i '
+
+System: It appears the previous response was cut off, likely due to a length limitation or processing issue. I'll complete the `sorting.html` page by providing the full content for Topic 6, "Sorting Algorithms," ensuring all subtopics (Bubble Sort, Selection Sort, Insertion Sort, Merge Sort, Quick Sort, Counting Sort, Radix Sort) are covered with definitions, real-life analogies, usage, syntax with line-by-line explanations, and 2-3 C++ code examples per subtopic. The page will maintain the same styling (white cards, blue headers) and navigation menu as the previous pages, ensuring consistency and offline functionality.
+
+<xaiArtifact artifact_id="90f8a331-ff98-4ba8-b71a-e2e11841eb03" artifact_version_id="f9e16315-5122-4222-aa21-54d623567792" title="sorting.html" contentType="text/html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithms - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>6. Sorting Algorithms</h2>
+            <div class="subtopic">
+                <h3>Bubble Sort</h3>
+                <p><strong>Definition:</strong> Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order, pushing larger elements to the end.</p>
+                <p><strong>Real-life Analogy:</strong> Like arranging books on a shelf by repeatedly swapping adjacent books if they are out of order, until all books are sorted.</p>
+                <p><strong>Usage:</strong> Used for small datasets or educational purposes due to its simplicity, though inefficient for large data.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+int main() {
+    int arr[] = {64, 34, 25, 12, 22};
+    int n = 5;
+    bubbleSort(arr, n);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 0; i < n - 1; i++)</code>: Iterates n-1 times to ensure sorting.<br>
+                - <code>for (int j = 0; j < n - i - 1; j++)</code>: Compares adjacent elements.<br>
+                - <code>if (arr[j] > arr[j + 1])</code>: Swaps if current element is larger.<br>
+                - <code>swap(arr[j], arr[j + 1])</code>: Exchanges elements.<br>
+                - Time Complexity: O(n²), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to implement bubble sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    bubbleSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to optimize bubble sort with a flag.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break;
+    }
+}
+int main() {
+    int arr[] = {64, 34, 25, 12, 22};
+    int n = 5;
+    bubbleSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Selection Sort</h3>
+                <p><strong>Definition:</strong> Selection Sort repeatedly finds the minimum element from the unsorted portion and places it at the beginning of the sorted portion.</p>
+                <p><strong>Real-life Analogy:</strong> Like picking the smallest item from a pile and placing it in order, repeating until the pile is sorted.</p>
+                <p><strong>Usage:</strong> Used for small datasets or when minimizing swaps is important, though inefficient for large data.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        swap(arr[i], arr[min_idx]);
+    }
+}
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};
+    int n = 5;
+    selectionSort(arr, n);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 0; i < n - 1; i++)</code>: Iterates through unsorted portion.<br>
+                - <code>min_idx = i</code>: Tracks index of minimum element.<br>
+                - <code>for (int j = i + 1; j < n; j++)</code>: Finds minimum in unsorted part.<br>
+                - <code>swap(arr[i], arr[min_idx])</code>: Places minimum at sorted position.<br>
+                - Time Complexity: O(n²), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to implement selection sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        swap(arr[i], arr[min_idx]);
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    selectionSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the kth smallest element using selection sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int kthSmallest(int arr[], int n, int k) {
+    for (int i = 0; i < k; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        swap(arr[i], arr[min_idx]);
+    }
+    return arr[k - 1];
+}
+int main() {
+    int arr[] = {7, 10, 4, 3, 20, 15};
+    int n = 6, k = 3;
+    cout << "Kth smallest: " << kthSmallest(arr, n, k) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Insertion Sort</h3>
+                <p><strong>Definition:</strong> Insertion Sort builds a sorted array one element at a time by inserting each element into its correct position in the sorted portion.</p>
+                <p><strong>Real-life Analogy:</strong> Like sorting a hand of cards by inserting each new card into its proper place among the already sorted cards.</p>
+                <p><strong>Usage:</strong> Used for small datasets or nearly sorted arrays, as it performs well in such cases.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+int main() {
+    int arr[] = {12, 11, 13, 5, 6};
+    int n = 5;
+    insertionSort(arr, n);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>for (int i = 1; i < n; i++)</code>: Iterates through unsorted elements.<br>
+                - <code>key = arr[i]</code>: Element to insert.<br>
+                - <code>while (j >= 0 && arr[j] > key)</code>: Shifts larger elements right.<br>
+                - <code>arr[j + 1] = key</code>: Inserts key in correct position.<br>
+                - Time Complexity: O(n²), Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to implement insertion sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    insertionSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to sort an almost sorted array using insertion sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void insertionSort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+int main() {
+    int arr[] = {2, 3, 1, 4, 5};
+    int n = 5;
+    insertionSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Merge Sort</h3>
+                <p><strong>Definition:</strong> Merge Sort divides the array into two halves, recursively sorts them, and merges the sorted halves to produce a sorted array.</p>
+                <p><strong>Real-life Analogy:</strong> Like dividing a large stack of papers into smaller stacks, sorting each, and then combining them in order.</p>
+                <p><strong>Usage:</strong> Used for large datasets, stable sorting, and when consistent performance is needed.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = 6;
+    mergeSort(arr, 0, n - 1);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>mergeSort</code>: Recursively divides array into halves.<br>
+                - <code>m = l + (r - l) / 2</code>: Finds middle point.<br>
+                - <code>merge</code>: Merges two sorted subarrays.<br>
+                - <code>L[i] <= R[j]</code>: Compares and merges elements in order.<br>
+                - Time Complexity: O(n log n), Space Complexity: O(n).</p>
+                <p><strong>Example 1: Write a program to implement merge sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else arr[k++] = R[j++];
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    mergeSort(arr, 0, n - 1);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count inversions using merge sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+long long merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1, n2 = r - m;
+    int L[n1], R[n2];
+    long long inv = 0;
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) arr[k++] = L[i++];
+        else {
+            arr[k++] = R[j++];
+            inv += n1 - i;
+        }
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+    return inv;
+}
+long long mergeSort(int arr[], int l, int r) {
+    long long inv = 0;
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        inv += mergeSort(arr, l, m);
+        inv += mergeSort(arr, m + 1, r);
+        inv += merge(arr, l, m, r);
+    }
+    return inv;
+}
+int main() {
+    int arr[] = {8, 4, 2, 1};
+    int n = 4;
+    cout << "Inversions: " << mergeSort(arr, 0, n - 1) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Quick Sort</h3>
+                <p><strong>Definition:</strong> Quick Sort picks a pivot, partitions the array around it, and recursively sorts the subarrays.</p>
+                <p><strong>Real-life Analogy:</strong> Like dividing a group into those taller and shorter than a chosen person, then repeating the process for each subgroup.</p>
+                <p><strong>Usage:</strong> Used for large datasets due to its average-case efficiency, though sensitive to pivot choice.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return i + 1;
+}
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = 6;
+    quickSort(arr, 0, n - 1);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>partition</code>: Places pivot in correct position, smaller elements before, larger after.<br>
+                - <code>pivot = arr[high]</code>: Chooses last element as pivot.<br>
+                - <code>i = low - 1</code>: Tracks position for smaller elements.<br>
+                - <code>quickSort</code>: Recursively sorts subarrays.<br>
+                - Time Complexity: O(n log n) average, O(n²) worst; Space Complexity: O(log n).</p>
+                <p><strong>Example 1: Write a program to implement quick sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return i + 1;
+}
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    quickSort(arr, 0, n - 1);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the kth largest element using quick sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] >= pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return i + 1;
+}
+int kthLargest(int arr[], int low, int high, int k) {
+    if (low <= high) {
+        int pi = partition(arr, low, high);
+        if (pi == k - 1) return arr[pi];
+        if (pi > k - 1) return kthLargest(arr, low, pi - 1, k);
+        return kthLargest(arr, pi + 1, high, k);
+    }
+    return -1;
+}
+int main() {
+    int arr[] = {7, 10, 4, 3, 20, 15};
+    int n = 6, k = 3;
+    cout << "Kth largest: " << kthLargest(arr, 0, n - 1, k) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Counting Sort</h3>
+                <p><strong>Definition:</strong> Counting Sort counts the occurrences of each element and uses them to place elements in sorted order, assuming elements are within a known range.</p>
+                <p><strong>Real-life Analogy:</strong> Like sorting coins by counting how many of each denomination you have and placing them in order.</p>
+                <p><strong>Usage:</strong> Used for integers within a small range, offering linear time complexity.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int max_val) {
+    int count[max_val + 1] = {0};
+    for (int i = 0; i < n; i++) count[arr[i]]++;
+    for (int i = 1; i <= max_val; i++) count[i] += count[i - 1];
+    int output[n];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+int main() {
+    int arr[] = {4, 2, 2, 8, 3, 3, 1};
+    int n = 7, max_val = 8;
+    countingSort(arr, n, max_val);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>count[max_val + 1]</code>: Stores count of each element.<br>
+                - <code>count[arr[i]]++</code>: Increments count for each element.<br>
+                - <code>count[i] += count[i - 1]</code>: Computes cumulative counts.<br>
+                - <code>output[count[arr[i]] - 1] = arr[i]</code>: Places elements in sorted order.<br>
+                - Time Complexity: O(n + k), Space Complexity: O(n + k), where k is range.</p>
+                <p><strong>Example 1: Write a program to implement counting sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int max_val) {
+    int count[max_val + 1] = {0};
+    for (int i = 0; i < n; i++) count[arr[i]]++;
+    for (int i = 1; i <= max_val; i++) count[i] += count[i - 1];
+    int output[n];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+int main() {
+    int n, max_val;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    cout << "Enter max value in array: ";
+    cin >> max_val;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    countingSort(arr, n, max_val);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to sort an array with small range using counting sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int max_val) {
+    int count[max_val + 1] = {0};
+    for (int i = 0; i < n; i++) count[arr[i]]++;
+    for (int i = 1; i <= max_val; i++) count[i] += count[i - 1];
+    int output[n];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+int main() {
+    int arr[] = {1, 4, 1, 2, 7, 5, 2};
+    int n = 7, max_val = 7;
+    countingSort(arr, n, max_val);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Radix Sort</h3>
+                <p><strong>Definition:</strong> Radix Sort sorts integers by processing digits from least significant to most significant, using counting sort for each digit.</p>
+                <p><strong>Real-life Analogy:</strong> Like sorting a deck of cards by first sorting by suit, then by rank, using separate piles for each step.</p>
+                <p><strong>Usage:</strong> Used for sorting integers or strings with fixed-length keys, especially when numbers have a large range but fixed digits.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int exp) {
+    int output[n], count[10] = {0};
+    for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++) count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+void radixSort(int arr[], int n) {
+    int max_val = arr[0];
+    for (int i = 1; i < n; i++) if (arr[i] > max_val) max_val = arr[i];
+    for (int exp = 1; max_val / exp > 0; exp *= 10) countingSort(arr, n, exp);
+}
+int main() {
+    int arr[] = {170, 45, 75, 90, 802, 24, 2, 66};
+    int n = 8;
+    radixSort(arr, n);
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>countingSort</code>: Sorts based on digit at position <code>exp</code>.<br>
+                - <code>(arr[i] / exp) % 10</code>: Extracts digit at current place.<br>
+                - <code>for (exp = 1; max_val / exp > 0; exp *= 10)</code>: Processes each digit.<br>
+                - Time Complexity: O(d * (n + k)), Space Complexity: O(n + k), where d is max digits, k is 10.</p>
+                <p><strong>Example 1: Write a program to implement radix sort with user input.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int exp) {
+    int output[n], count[10] = {0};
+    for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++) count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+void radixSort(int arr[], int n) {
+    int max_val = arr[0];
+    for (int i = 1; i < n; i++) if (arr[i] > max_val) max_val = arr[i];
+    for (int exp = 1; max_val / exp > 0; exp *= 10) countingSort(arr, n, exp);
+}
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    radixSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to sort an array with large numbers using radix sort.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+void countingSort(int arr[], int n, int exp) {
+    int output[n], count[10] = {0};
+    for (int i = 0; i < n; i++) count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++) count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (int i = 0; i < n; i++) arr[i] = output[i];
+}
+void radixSort(int arr[], int n) {
+    int max_val = arr[0];
+    for (int i = 1; i < n; i++) if (arr[i] > max_val) max_val = arr[i];
+    for (int exp = 1; max_val / exp > 0; exp *= 10) countingSort(arr, n, exp);
+}
+int main() {
+    int arr[] = {432, 8, 530, 90, 88, 231, 11, 45};
+    int n = 8;
+    radixSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

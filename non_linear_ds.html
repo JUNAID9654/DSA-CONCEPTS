@@ -1,0 +1,508 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Linear Data Structures - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>4. Non-Linear Data Structures</h2>
+            <div class="subtopic">
+                <h3>Trees (Binary Tree, BST, AVL, Segment Tree, Trie, etc.)</h3>
+                <p><strong>Definition:</strong> Trees are hierarchical structures with nodes connected by edges, where each node has a parent and children. Binary Trees have at most two children, Binary Search Trees (BST) maintain sorted order, AVL trees are self-balancing BSTs, Segment Trees handle range queries, and Tries store strings efficiently.</p>
+                <p><strong>Real-life Analogy:</strong> Like a family tree, where each person (node) has parents and children. A BST is like a sorted filing cabinet, an AVL tree keeps files balanced, a Segment Tree is like a ledger for quick range sums, and a Trie is like a phonebook for prefixes.</p>
+                <p><strong>Usage:</strong> Used for hierarchical data (file systems), searching (BST), range queries (Segment Tree), or prefix-based searches (Trie).</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+void inorder(Node* root) {
+    if (root) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+int main() {
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    inorder(root);
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>struct Node</code>: Defines a tree node with data and left/right pointers.<br>
+                - <code>Node(int val)</code>: Constructor initializes a node.<br>
+                - <code>inorder(root)</code>: Recursively prints tree in left-root-right order.<br>
+                - <code>root->left = new Node(2)</code>: Creates left child.</p>
+                <p><strong>Example 1: Write a program to perform inorder traversal of a binary tree.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+void inorder(Node* root) {
+    if (root) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+int main() {
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    cout << "Inorder: ";
+    inorder(root);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to insert a node in a BST.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+Node* insertBST(Node* root, int val) {
+    if (!root) return new Node(val);
+    if (val < root->data)
+        root->left = insertBST(root->left, val);
+    else
+        root->right = insertBST(root->right, val);
+    return root;
+}
+void inorder(Node* root) {
+    if (root) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+int main() {
+    Node* root = nullptr;
+    root = insertBST(root, 50);
+    insertBST(root, 30);
+    insertBST(root, 70);
+    cout << "BST Inorder: ";
+    inorder(root);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 3: Write a program to search for a prefix in a Trie.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+struct TrieNode {
+    TrieNode* children[26];
+    bool isEnd;
+    TrieNode() : isEnd(false) {
+        for (int i = 0; i < 26; i++) children[i] = nullptr;
+    }
+};
+void insertTrie(TrieNode* root, string word) {
+    TrieNode* curr = root;
+    for (char c : word) {
+        int idx = c - 'a';
+        if (!curr->children[idx]) curr->children[idx] = new TrieNode();
+        curr = curr->children[idx];
+    }
+    curr->isEnd = true;
+}
+bool searchPrefix(TrieNode* root, string prefix) {
+    TrieNode* curr = root;
+    for (char c : prefix) {
+        int idx = c - 'a';
+        if (!curr->children[idx]) return false;
+        curr = curr->children[idx];
+    }
+    return true;
+}
+int main() {
+    TrieNode* root = new TrieNode();
+    insertTrie(root, "apple");
+    cout << (searchPrefix(root, "app") ? "Prefix found" : "Prefix not found") << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Heaps (Min/Max Heap, Heapify, Heap Sort)</h3>
+                <p><strong>Definition:</strong> Heaps are complete binary trees where the parent is smaller (Min Heap) or larger (Max Heap) than its children. Heapify ensures heap property, and Heap Sort uses heaps to sort data.</p>
+                <p><strong>Real-life Analogy:</strong> Like a priority queue at a hospital—most critical patients (Min Heap for smallest priority) are treated first. Heapify is like reorganizing the queue, and Heap Sort is like sorting patients by urgency.</p>
+                <p><strong>Usage:</strong> Used for priority queues, finding min/max elements, or sorting (Heap Sort).</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1, right = 2 * i + 2;
+    if (left < n && arr[left] > arr[largest]) largest = left;
+    if (right < n && arr[right] > arr[largest]) largest = right;
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+int main() {
+    vector<int> arr = {4, 10, 3, 5, 1};
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    for (int x : arr) cout << x << " ";
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>heapify</code>: Ensures max heap property by comparing parent with children.<br>
+                - <code>largest = i</code>: Tracks index of largest value.<br>
+                - <code>left = 2 * i + 1</code>: Left child index.<br>
+                - <code>swap(arr[i], arr[largest])</code>: Swaps if child is larger.<br>
+                - Recursive <code>heapify</code> call fixes subtree.</p>
+                <p><strong>Example 1: Write a program to implement a Max Heap.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1, right = 2 * i + 2;
+    if (left < n && arr[left] > arr[largest]) largest = left;
+    if (right < n && arr[right] > arr[largest]) largest = right;
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+void buildMaxHeap(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+}
+int main() {
+    vector<int> arr = {4, 10, 3, 5, 1};
+    buildMaxHeap(arr);
+    cout << "Max Heap: ";
+    for (int x : arr) cout << x << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to implement Heap Sort.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1, right = 2 * i + 2;
+    if (left < n && arr[left] > arr[largest]) largest = left;
+    if (right < n && arr[right] > arr[largest]) largest = right;
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+void heapSort(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
+    }
+}
+int main() {
+    vector<int> arr = {12, 11, 13, 5, 6, 7};
+    heapSort(arr);
+    cout << "Sorted: ";
+    for (int x : arr) cout << x << " ";
+    cout << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Graphs (Adjacency List/Matrix, BFS, DFS, Dijkstra, MST, etc.)</h3>
+                <p><strong>Definition:</strong> Graphs are collections of nodes (vertices) connected by edges. Adjacency List/Matrix represent graphs, BFS (Breadth-First Search) and DFS (Depth-First Search) traverse graphs, Dijkstra finds shortest paths, and MST (Minimum Spanning Tree) connects all nodes with minimum edge weight.</p>
+                <p><strong>Real-life Analogy:</strong> Like a map of cities (nodes) connected by roads (edges). BFS is like exploring nearby cities first, DFS is like diving deep into one path, Dijkstra finds the fastest route, and MST builds the cheapest road network.</p>
+                <p><strong>Usage:</strong> Used for network analysis, shortest paths, social networks, or scheduling.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void addEdge(vector<vector<int>>& adj, int u, int v) {
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+}
+void dfs(vector<vector<int>>& adj, int v, vector<bool>& visited) {
+    visited[v] = true;
+    cout << v << " ";
+    for (int u : adj[v]) {
+        if (!visited[u]) dfs(adj, u, visited);
+    }
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> adj(V);
+    addEdge(adj, 0, 1);
+    addEdge(adj, 0, 2);
+    addEdge(adj, 1, 3);
+    vector<bool> visited(V, false);
+    dfs(adj, 0, visited);
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>vector<vector<int>> adj</code>: Adjacency list for graph.<br>
+                - <code>addEdge</code>: Adds edges between vertices <code>u</code> and <code>v</code>.<br>
+                - <code>dfs</code>: Recursively visits unvisited neighbors.<br>
+                - <code>visited[v] = true</code>: Marks node as visited.</p>
+                <p><strong>Example 1: Write a program to perform BFS on a graph.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+void addEdge(vector<vector<int>>& adj, int u, int v) {
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+}
+void bfs(vector<vector<int>>& adj, int start, int V) {
+    vector<bool> visited(V, false);
+    queue<int> q;
+    visited[start] = true;
+    q.push(start);
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        cout << v << " ";
+        for (int u : adj[v]) {
+            if (!visited[u]) {
+                visited[u] = true;
+                q.push(u);
+            }
+        }
+    }
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> adj(V);
+    addEdge(adj, 0, 1);
+    addEdge(adj, 0, 2);
+    addEdge(adj, 1, 3);
+    cout << "BFS: ";
+    bfs(adj, 0, V);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to perform DFS on a graph.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void addEdge(vector<vector<int>>& adj, int u, int v) {
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+}
+void dfs(vector<vector<int>>& adj, int v, vector<bool>& visited) {
+    visited[v] = true;
+    cout << v << " ";
+    for (int u : adj[v]) {
+        if (!visited[u]) dfs(adj, u, visited);
+    }
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> adj(V);
+    addEdge(adj, 0, 1);
+    addEdge(adj, 0, 2);
+    addEdge(adj, 1, 3);
+    vector<bool> visited(V, false);
+    cout << "DFS: ";
+    dfs(adj, 0, visited);
+    cout << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 3: Write a program to implement Dijkstra’s algorithm for shortest paths.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+void dijkstra(vector<vector<pair<int, int>>>& adj, int V, int src) {
+    vector<int> dist(V, INT_MAX);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    dist[src] = 0;
+    pq.push({0, src});
+    while (!pq.empty()) {
+        int d = pq.top().first, u = pq.top().second;
+        pq.pop();
+        if (d > dist[u]) continue;
+        for (auto& edge : adj[u]) {
+            int v = edge.first, weight = edge.second;
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    for (int i = 0; i < V; i++)
+        cout << "Distance to " << i << ": " << dist[i] << endl;
+}
+int main() {
+    int V = 4;
+    vector<vector<pair<int, int>>> adj(V);
+    adj[0].push_back({1, 4});
+    adj[0].push_back({2, 8});
+    adj[1].push_back({2, 2});
+    adj[1].push_back({3, 5});
+    adj[2].push_back({3, 1});
+    dijkstra(adj, V, 0);
+    return 0;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

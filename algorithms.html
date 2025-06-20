@@ -1,0 +1,1197 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithms - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>8. Algorithms</h2>
+            <div class="subtopic">
+                <h3>Backtracking</h3>
+                <p><strong>Definition:</strong> Backtracking is a recursive algorithmic technique that tries all possible solutions and backtracks when a solution is invalid.</p>
+                <p><strong>Real-life Analogy:</strong> Like solving a maze by trying all paths and retreating when hitting a dead end to try another route.</p>
+                <p><strong>Usage:</strong> Used for problems like N-Queens, Sudoku, or generating permutations.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isSafe(int board[][4], int row, int col, int N) {
+    for (int i = 0; i < col; i++) if (board[row][i]) return false;
+    for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j]) return false;
+    for (int i = row, j = col; i < N && j >= 0; i++, j--)
+        if (board[i][j]) return false;
+    return true;
+}
+bool solveNQueens(int board[][4], int col, int N) {
+    if (col >= N) return true;
+    for (int i = 0; i < N; i++) {
+        if (isSafe(board, i, col, N)) {
+            board[i][col] = 1;
+            if (solveNQueens(board, col + 1, N)) return true;
+            board[i][col] = 0;
+        }
+    }
+    return false;
+}
+int main() {
+    int N = 4;
+    int board[4][4] = {0};
+    if (solveNQueens(board, 0, N)) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) cout << board[i][j] << " ";
+            cout << endl;
+        }
+    } else {
+        cout << "No solution exists" << endl;
+    }
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>isSafe</code>: Checks if a queen can be placed at (row, col).<br>
+                - <code>solveNQueens</code>: Recursively places queens column by column.<br>
+                - <code>board[i][col] = 1</code>: Places queen.<br>
+                - <code>board[i][col] = 0</code>: Backtracks by removing queen.<br>
+                - Time Complexity: O(N!), Space Complexity: O(N²).</p>
+                <p><strong>Example 1: Write a program to solve the N-Queens problem.</strong></p>
+                <pre><code>#include <iostream>
+using namespace std;
+bool isSafe(int board[][10], int row, int col, int N) {
+    for (int i = 0; i < col; i++) if (board[row][i]) return false;
+    for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j]) return false;
+    for (int i = row, j = col; i < N && j >= 0; i++, j--)
+        if (board[i][j]) return false;
+    return true;
+}
+bool solveNQueens(int board[][10], int col, int N) {
+    if (col >= N) return true;
+    for (int i = 0; i < N; i++) {
+        if (isSafe(board, i, col, N)) {
+            board[i][col] = 1;
+            if (solveNQueens(board, col + 1, N)) return true;
+            board[i][col] = 0;
+        }
+    }
+    return false;
+}
+int main() {
+    int N;
+    cout << "Enter board size N: ";
+    cin >> N;
+    int board[10][10] = {0};
+    if (solveNQueens(board, 0, N)) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) cout << board[i][j] << " ";
+            cout << endl;
+        }
+    } else {
+        cout << "No solution exists" << endl;
+    }
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to generate all permutations of a string.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+void permute(string& s, int l, int r) {
+    if (l == r) cout << s << endl;
+    else {
+        for (int i = l; i <= r; i++) {
+            swap(s[l], s[i]);
+            permute(s, l + 1, r);
+            swap(s[l], s[i]);
+        }
+    }
+}
+int main() {
+    string s = "ABC";
+    permute(s, 0, s.length() - 1);
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Topological Sort</h3>
+                <p><strong>Definition:</strong> Topological Sort orders vertices in a directed acyclic graph (DAG) such that for every edge u→v, u comes before v.</p>
+                <p><strong>Real-life Analogy:</strong> Like scheduling tasks where some tasks must be completed before others, ensuring prerequisites are done first.</p>
+                <p><strong>Usage:</strong> Used for course scheduling, build systems, or task dependencies.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+void topologicalSortUtil(int v, vector<vector<int>>& adj, vector<bool>& visited, stack<int>& st) {
+    visited[v] = true;
+    for (int u : adj[v]) {
+        if (!visited[u]) topologicalSortUtil(u, adj, visited, st);
+    }
+    st.push(v);
+}
+void topologicalSort(vector<vector<int>>& adj, int V) {
+    vector<bool> visited(V, false);
+    stack<int> st;
+    for (int i = 0; i < V; i++) {
+        if (!visited[i]) topologicalSortUtil(i, adj, visited, st);
+    }
+    while (!st.empty()) {
+        cout << st.top() << " ";
+        st.pop();
+    }
+}
+int main() {
+    int V = 6;
+    vector<vector<int>> adj(V);
+    adj[5].push_back(2);
+    adj[5].push_back(0);
+    adj[4].push_back(0);
+    adj[4].push_back(1);
+    adj[2].push_back(3);
+    adj[3].push_back(1);
+    cout << "Topological Sort: ";
+    topologicalSort(adj, V);
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>topologicalSortUtil</code>: DFS to visit nodes and push to stack after visiting all neighbors.<br>
+                - <code>st.push(v)</code>: Adds node after all dependencies are processed.<br>
+                - <code>while (!st.empty())</code>: Prints nodes in topological order.<br>
+                - Time Complexity: O(V + E), Space Complexity: O(V).</p>
+                <p><strong>Example 1: Write a program to perform topological sort on a DAG.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+void topologicalSortUtil(int v, vector<vector<int>>& adj, vector<bool>& visited, stack<int>& st) {
+    visited[v] = true;
+    for (int u : adj[v]) {
+        if (!visited[u]) topologicalSortUtil(u, adj, visited, st);
+    }
+    st.push(v);
+}
+void topologicalSort(vector<vector<int>>& adj, int V) {
+    vector<bool> visited(V, false);
+    stack<int> st;
+    for (int i = 0; i < V; i++) {
+        if (!visited[i]) topologicalSortUtil(i, adj, visited, st);
+    }
+    cout << "Topological Sort: ";
+    while (!st.empty()) {
+        cout << st.top() << " ";
+        st.pop();
+    }
+    cout << endl;
+}
+int main() {
+    int V, E;
+    cout << "Enter number of vertices and edges: ";
+    cin >> V >> E;
+    vector<vector<int>> adj(V);
+    cout << "Enter edges (u v): ";
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+    }
+    topologicalSort(adj, V);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to check if a graph is a DAG using topological sort.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+bool isDAGUtil(int v, vector<vector<int>>& adj, vector<bool>& visited, vector<bool>& recStack) {
+    visited[v] = true;
+    recStack[v] = true;
+    for (int u : adj[v]) {
+        if (!visited[u]) {
+            if (isDAGUtil(u, adj, visited, recStack)) return true;
+        } else if (recStack[u]) return true;
+    }
+    recStack[v] = false;
+    return false;
+}
+bool isDAG(vector<vector<int>>& adj, int V) {
+    vector<bool> visited(V, false), recStack(V, false);
+    for (int i = 0; i < V; i++) {
+        if (!visited[i] && isDAGUtil(i, adj, visited, recStack)) return false;
+    }
+    return true;
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> adj(V);
+    adj[0].push_back(1);
+    adj[1].push_back(2);
+    adj[2].push_back(3);
+    cout << (isDAG(adj, V) ? "Graph is a DAG" : "Graph is not a DAG") << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Union Find</h3>
+                <p><strong>Definition:</strong> Union Find (Disjoint Set) maintains a collection of disjoint sets, supporting union (merge sets) and find (find set representative).</p>
+                <p><strong>Real-life Analogy:</strong> Like grouping friends into circles and checking if two people are in the same circle or merging circles.</p>
+                <p><strong>Usage:</strong> Used for detecting cycles, Kruskal’s MST, or connected components.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+class UnionFind {
+    vector<int> parent, rank;
+public:
+    UnionFind(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+    void unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return;
+        if (rank[px] < rank[py]) parent[px] = py;
+        else if (rank[px] > rank[py]) parent[py] = px;
+        else {
+            parent[py] = px;
+            rank[px]++;
+        }
+    }
+};
+int main() {
+    UnionFind uf(5);
+    uf.unite(0, 1);
+    uf.unite(1, 2);
+    cout << (uf.find(0) == uf.find(2) ? "Connected" : "Not connected") << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>find</code>: Returns set representative with path compression.<br>
+                - <code>unite</code>: Merges sets by rank to keep tree balanced.<br>
+                - <code>rank[px]++</code>: Increments rank if equal ranks.<br>
+                - Time Complexity: O(α(n)) amortized, Space Complexity: O(n).</p>
+                <p><strong>Example 1: Write a program to detect a cycle in an undirected graph using Union Find.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+class UnionFind {
+    vector<int> parent, rank;
+public:
+    UnionFind(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+    bool unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return false;
+        if (rank[px] < rank[py]) parent[px] = py;
+        else if (rank[px] > rank[py]) parent[py] = px;
+        else {
+            parent[py] = px;
+            rank[px]++;
+        }
+        return true;
+    }
+};
+bool hasCycle(vector<pair<int, int>>& edges, int V) {
+    UnionFind uf(V);
+    for (auto& edge : edges) {
+        if (!uf.unite(edge.first, edge.second)) return true;
+    }
+    return false;
+}
+int main() {
+    int V = 4;
+    vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 1}};
+    cout << (hasCycle(edges, V) ? "Cycle detected" : "No cycle") << endl;
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the number of connected components.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+class UnionFind {
+    vector<int> parent, rank;
+public:
+    UnionFind(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+    void unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return;
+        if (rank[px] < rank[py]) parent[px] = py;
+        else if (rank[px] > rank[py]) parent[py] = px;
+        else {
+            parent[py] = px;
+            rank[px]++;
+        }
+    }
+    int countComponents(int n) {
+        int count = n;
+        for (int i = 0; i < n; i++) {
+            if (parent[i] != i) count--;
+        }
+        return count;
+    }
+};
+int main() {
+    int V = 5;
+    UnionFind uf(V);
+    uf.unite(0, 1);
+    uf.unite(2, 3);
+    cout << "Number of connected components: " << uf.countComponents(V) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>KMP (Knuth-Morris-Pratt)</h3>
+                <p><strong>Definition:</strong> KMP algorithm efficiently searches for a pattern in a text by precomputing a prefix table to avoid redundant comparisons.</p>
+                <p><strong>Real-life Analogy:</strong> Like searching for a word in a book by noting where prefixes repeat, skipping unnecessary re-reads.</p>
+                <p><strong>Usage:</strong> Used for string matching, such as finding substrings or pattern occurrences.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<int> computeLPS(string pat) {
+    int m = pat.length();
+    vector<int> lps(m);
+    lps[0] = 0;
+    int len = 0, i = 1;
+    while (i < m) {
+        if (pat[i] == pat[len]) {
+            len++;
+            lps[i++] = len;
+        } else {
+            if (len != 0) len = lps[len - 1];
+            else lps[i++] = 0;
+        }
+    }
+    return lps;
+}
+void KMP(string txt, string pat) {
+    int n = txt.length(), m = pat.length();
+    vector<int> lps = computeLPS(pat);
+    int i = 0, j = 0;
+    while (i < n) {
+        if (pat[j] == txt[i]) {
+            i++;
+            j++;
+        }
+        if (j == m) {
+            cout << "Pattern found at index " << i - j << endl;
+            j = lps[j - 1];
+        } else if (i < n && pat[j] != txt[i]) {
+            if (j != 0) j = lps[j - 1];
+            else i++;
+        }
+    }
+}
+int main() {
+    string txt = "AABAACAADAABAAABAA";
+    string pat = "AABA";
+    KMP(txt, pat);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>computeLPS</code>: Builds longest prefix-suffix array.<br>
+                - <code>lps[i] = len</code>: Stores length of longest prefix-suffix.<br>
+                - <code>KMP</code>: Matches pattern with text using LPS.<br>
+                - Time Complexity: O(n + m), Space Complexity: O(m).</p>
+                <p><strong>Example 1: Write a program to implement KMP string matching.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<int> computeLPS(string pat) {
+    int m = pat.length();
+    vector<int> lps(m);
+    lps[0] = 0;
+    int len = 0, i = 1;
+    while (i < m) {
+        if (pat[i] == pat[len]) {
+            len++;
+            lps[i++] = len;
+        } else {
+            if (len != 0) len = lps[len - 1];
+            else lps[i++] = 0;
+        }
+    }
+    return lps;
+}
+void KMP(string txt, string pat) {
+    int n = txt.length(), m = pat.length();
+    vector<int> lps = computeLPS(pat);
+    int i = 0, j = 0;
+    while (i < n) {
+        if (pat[j] == txt[i]) {
+            i++;
+            j++;
+        }
+        if (j == m) {
+            cout << "Pattern found at index " << i - j << endl;
+            j = lps[j - 1];
+        } else if (i < n && pat[j] != txt[i]) {
+            if (j != 0) j = lps[j - 1];
+            else i++;
+        }
+    }
+}
+int main() {
+    string txt, pat;
+    cout << "Enter text: ";
+    cin >> txt;
+    cout << "Enter pattern: ";
+    cin >> pat;
+    KMP(txt, pat);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count pattern occurrences using KMP.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<int> computeLPS(string pat) {
+    int m = pat.length();
+    vector<int> lps(m);
+    lps[0] = 0;
+    int len = 0, i = 1;
+    while (i < m) {
+        if (pat[i] == pat[len]) {
+            len++;
+            lps[i++] = len;
+        } else {
+            if (len != 0) len = lps[len - 1];
+            else lps[i++] = 0;
+        }
+    }
+    return lps;
+}
+int countOccurrences(string txt, string pat) {
+    int n = txt.length(), m = pat.length();
+    vector<int> lps = computeLPS(pat);
+    int i = 0, j = 0, count = 0;
+    while (i < n) {
+        if (pat[j] == txt[i]) {
+            i++;
+            j++;
+        }
+        if (j == m) {
+            count++;
+            j = lps[j - 1];
+        } else if (i < n && pat[j] != txt[i]) {
+            if (j != 0) j = lps[j - 1];
+            else i++;
+        }
+    }
+    return count;
+}
+int main() {
+    string txt = "AABAACAADAABAAABAA";
+    string pat = "AABA";
+    cout << "Occurrences: " << countOccurrences(txt, pat) << endl;
+    return 0;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Rabin-Karp</h3>
+                <p><strong>Definition:</strong> Rabin-Karp algorithm uses hashing to find a pattern in a text, with rolling hash to efficiently compare substrings.</p>
+                <p><strong>Real-life Analogy:</strong> Like checking a book for a phrase by computing a quick checksum for each section, verifying only when checksums match.</p>
+                <p><strong>Usage:</strong> Used for string matching, plagiarism detection, or multiple pattern searches.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+void rabinKarp(string txt, string pat, int q) {
+    int d = 256;
+    int m = pat.length(), n = txt.length();
+    int p = 0, t = 0, h = 1;
+    for (int i = 0; i < m - 1; i++) h = (h * d) % q;
+    for (int i = 0; i < m; i++) {
+        p = (d * p + pat[i]) % q;
+        t = (d * t + txt[i]) % q;
+    }
+    for (int i = 0; i <= n - m; i++) {
+        if (p == t) {
+            bool match = true;
+            for (int j = 0; j < m; j++) {
+                if (txt[i + j] != pat[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) cout << "Pattern found at index " << i << endl;
+        }
+        if (i < n - m) {
+            t = (d * (t - txt[i] * h) + txt[i + m]) % q;
+            if (t < 0) t += q;
+        }
+    }
+}
+int main() {
+    string txt = "GEEKSFORGEEKS";
+    string pat = "GEEK";
+    int q = 101;
+    rabinKarp(txt, pat, q);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>p = (d * p + pat[i]) % q</code>: Computes hash for pattern.<br>
+                - <code>t = (d * t + txt[i]) % q</code>: Computes hash for text window.<br>
+                - <code>t = (d * (t - txt[i] * h) + txt[i + m]) % q</code>: Updates rolling hash.<br>
+                - Time Complexity: O(n + m) average, O(nm) worst; Space Complexity: O(1).</p>
+                <p><strong>Example 1: Write a program to implement Rabin-Karp string matching.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+void rabinKarp(string txt, string pat, int q) {
+    int d = 256;
+    int m = pat.length(), n = txt.length();
+    int p = 0, t = 0, h = 1;
+    for (int i = 0; i < m - 1; i++) h = (h * d) % q;
+    for (int i = 0; i < m; i++) {
+        p = (d * p + pat[i]) % q;
+        t = (d * t + txt[i]) % q;
+    }
+    for (int i = 0; i <= n - m; i++) {
+        if (p == t) {
+            bool match = true;
+            for (int j = 0; j < m; j++) {
+                if (txt[i + j] != pat[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) cout << "Pattern found at index " << i << endl;
+        }
+        if (i < n - m) {
+            t = (d * (t - txt[i] * h) + txt[i + m]) % q;
+            if (t < 0) t += q;
+        }
+    }
+}
+int main() {
+    string txt, pat;
+    cout << "Enter text: ";
+    cin >> txt;
+    cout << "Enter pattern: ";
+    cin >> pat;
+    int q = 101;
+    rabinKarp(txt, pat, q);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to count pattern occurrences using Rabin-Karp.</strong></p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+int countOccurrences(string txt, string pat, int q) {
+    int d = 256;
+    int m = pat.length(), n = txt.length();
+    int p = 0, t = 0, h = 1, count = 0;
+    for (int i = 0; i < m - 1; i++) h = (h * d) % q;
+    for (int i = 0; i < m; i++) {
+        p = (d * p + pat[i]) % q;
+        t = (d * t + txt[i]) % q;
+    }
+    for (int i = 0; i <= n - m; accompaniment(i++) {
+        if (p == t) {
+            bool match = true;
+            for (int j = 0; j < m; j++) {
+                if (txt[i + j] != pat[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) count++;
+        }
+        if (i < n - m) {
+            t = (d * (t - txt[i] * h) + txt[i + m]) % q;
+            if (t < 0) t += q;
+        }
+    }
+    return count;
+}
+int main() {
+    string txt = "AABAACAADAABAAABAA";
+    string pat = "AABA";
+    int q = 101;
+    cout << "Occurrences: " << countOccurrences(txt, pat, q) << endl;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Floyd Warshall</h3>
+                <p><strong>Definition:</strong> Floyd Warshall computes shortest paths between all pairs of vertices in a weighted graph, handling negative weights (no negative cycles).</p>
+                <p><strong>Real-life Analogy:</strong> Like finding the shortest travel routes between all pairs of cities, considering all possible intermediate stops.</p>
+                <p><strong>Usage:</strong> Used for all-pairs shortest paths, transitive closure, or detecting negative cycles.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void floydWarshall(vector<vector<int>>& graph, int V) {
+    vector<vector<int>> dist(V, vector<int>(V));
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            dist[i][j] = graph[i][j];
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX &&
+                    dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INT_MAX) cout << "INF ";
+            else cout << dist[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> graph = {
+        {0, 5, INT_MAX, 10},
+        {INT_MAX, 0, 3, INT_MAX},
+        {INT_MAX, INT_MAX, 0, 1},
+        {INT_MAX, INT_MAX, INT_MAX, 0}
+    };
+    floydWarshall(graph, V);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>dist[i][j] = graph[i][j]</code>: Initializes distance matrix.<br>
+                - <code>dist[i][k] + dist[k][j] < dist[i][j]</code>: Updates shortest path via k.<br>
+                - Time Complexity: O(V³), Space Complexity: O(V²).</p>
+                <p><strong>Example 1: Write a program to implement Floyd Warshall algorithm.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void floydWarshall(vector<vector<int>>& graph, int V) {
+    vector<vector<int>> dist(V, vector<int>(V));
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            dist[i][j] = graph[i][j];
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX &&
+                    dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INT_MAX) cout << "INF ";
+            else cout << dist[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+int main() {
+    int V;
+    cout << "Enter number of vertices: ";
+    cin >> V;
+    vector<vector<int>> graph(V, vector<int>(V));
+    cout << "Enter adjacency matrix (use INF for no edge): ";
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++) {
+            string s;
+            cin >> s;
+            if (s == "INF") graph[i][j] = INT_MAX;
+            else graph[i][j] = stoi(s);
+        }
+    floydWarshall(graph, V);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to detect negative cycles using Floyd Warshall.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+bool hasNegativeCycle(vector<vector<int>>& graph, int V) {
+    vector<vector<int>> dist(V, vector<int>(V));
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            dist[i][j] = graph[i][j];
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX &&
+                    dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+    for (int i = 0; i < V; i++)
+        if (dist[i][i] < 0) return true;
+    return false;
+}
+int main() {
+    int V = 4;
+    vector<vector<int>> graph = {
+        {0, 1, INT_MAX, INT_MAX},
+        {INT_MAX, 0, -1, INT_MAX},
+        {INT_MAX, INT_MAX, 0, -1},
+        {-1, INT_MAX, INT_MAX, 0}
+    };
+    cout << (hasNegativeCycle(graph, V) ? "Negative cycle detected" : "No negative cycle") << endl;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>Bellman-Ford</h3>
+                <p><strong>Definition:</strong> Bellman-Ford computes shortest paths from a single source to all vertices, handling negative weights and detecting negative cycles.</p>
+                <p><strong>Real-life Analogy:</strong> Like finding the cheapest travel route from one city to others, retrying routes to account for discounts or penalties.</p>
+                <p><strong>Usage:</strong> Used for shortest paths with negative weights or detecting negative cycles in financial arbitrage.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+struct Edge {
+    int src, dest, weight;
+};
+void bellmanFord(vector<Edge>& edges, int V, int src) {
+    vector<int> dist(V, INT_MAX);
+    dist[src] = 0;
+    for (int i = 1; i < V; i++) {
+        for (auto& e : edges) {
+            if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+                dist[e.dest] = dist[e.src] + e.weight;
+            }
+        }
+    }
+    for (auto& e : edges) {
+        if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+            cout << "Negative cycle detected" << endl;
+            return;
+        }
+    }
+    for (int i = 0; i < V; i++) {
+        cout << "Distance to " << i << ": ";
+        if (dist[i] == INT_MAX) cout << "INF" << endl;
+        else cout << dist[i] << endl;
+    }
+}
+int main() {
+    int V = 5;
+    vector<Edge> edges = {
+        {0, 1, -1}, {0, 2, 4}, {1, 2, 3}, {1, 3, 2}, {1, 4, 2}, {3, 2, 5}, {3, 1, 1}, {4, 3, -3}
+    };
+    bellmanFord(edges, V, 0);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>dist[src] = 0</code>: Initializes source distance.<br>
+                - <code>dist[e.src] + e.weight < dist[e.dest]</code>: Updates distance if shorter path found.<br>
+                - Extra iteration checks for negative cycles.<br>
+                - Time Complexity: O(V * E), Space Complexity: O(V).</p>
+                <p><strong>Example 1: Write a program to implement Bellman-Ford algorithm.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+struct Edge {
+    int src, dest, weight;
+};
+void bellmanFord(vector<Edge>& edges, int V, int src) {
+    vector<int> dist(V, INT_MAX);
+    dist[src] = 0;
+    for (int i = 1; i < V; i++) {
+        for (auto& e : edges) {
+            if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+                dist[e.dest] = dist[e.src] + e.weight;
+            }
+        }
+    }
+    for (auto& e : edges) {
+        if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+            cout << "Negative cycle detected" << endl;
+            return;
+        }
+    }
+    for (int i = 0; i < V; i++) {
+        cout << "Distance to " << i << ": ";
+        if (dist[i] == INT_MAX) cout << "INF" << endl;
+        else cout << dist[i] << endl;
+    }
+}
+int main() {
+    int V, E, src;
+    cout << "Enter number of vertices and edges: ";
+    cin >> V >> E;
+    vector<Edge> edges(E);
+    cout << "Enter edges (src, dest, weight): ";
+    for (int i = 0; i < E; i++) {
+        cin >> edges[i].src >> edges[i].dest >> edges[i].weight;
+    }
+    cout << "Enter source vertex: ";
+    cin >> src;
+    bellmanFord(edges, V, src);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to detect negative cycles using Bellman-Ford.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+struct Edge {
+    int src, dest, weight;
+};
+bool hasNegativeCycle(vector<Edge>& edges, int V) {
+    vector<int> dist(V, INT_MAX);
+    dist[0] = 0;
+    for (int i = 1; i < V; i++) {
+        for (auto& e : edges) {
+            if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+                dist[e.dest] = dist[e.src] + e.weight;
+            }
+        }
+    }
+    for (auto& e : edges) {
+        if (dist[e.src] != INT_MAX && dist[e.src] + e.weight < dist[e.dest]) {
+            return true;
+        }
+    }
+    return false;
+}
+int main() {
+    int V = 3;
+    vector<Edge> edges = {{0, 1, -5}, {1, 2, -5}, {2, 0, -5}};
+    cout << (hasNegativeCycle(edges, V) ? "Negative cycle detected" : "No negative cycle") << endl;
+}
+</code></pre>
+            </div>
+            <div class="subtopic">
+                <h3>A* (A Star)</h3>
+                <p><strong>Definition:</strong> A* is a heuristic-based search algorithm that finds the shortest path from a start node to a goal node, using a cost function f(n) = g(n) + h(n).</p>
+                <p><strong>Real-life Analogy:</strong> Like navigating a city with a GPS that estimates distance to the destination and chooses the best route.</p>
+                <p><strong>Usage:</strong> Used in pathfinding for games, robotics, or navigation systems.</p>
+                <p><strong>Syntax:</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+using namespace std;
+struct Node {
+    int x, y, f, g, h;
+    bool operator>(const Node& other) const { return f > other.f; }
+};
+int heuristic(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+void aStar(vector<vector<int>>& grid, int startX, int startY, int endX, int endY) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<bool>> closed(rows, vector<bool>(cols, false));
+    vector<vector<int>> g_score(rows, vector<int>(cols, INT_MAX));
+    priority_queue<Node, vector<Node>, greater<Node>> open;
+    g_score[startX][startY] = 0;
+    open.push({startX, startY, heuristic(startX, startY, endX, endY), 0, heuristic(startX, startY, endX, endY)});
+    int dx[] = {0, 0, 1, -1}, dy[] = {1, -1, 0, 0};
+    while (!open.empty()) {
+        Node curr = open.top();
+        open.pop();
+        if (curr.x == endX && curr.y == endY) {
+            cout << "Path found with cost: " << curr.g << endl;
+            return;
+        }
+        closed[curr.x][curr.y] = true;
+        for (int i = 0; i < 4; i++) {
+            int nx = curr.x + dx[i], ny = curr.y + dy[i];
+            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && !grid[nx][ny] && !closed[nx][ny]) {
+                int new_g = curr.g + 1;
+                if (new_g < g_score[nx][ny]) {
+                    g_score[nx][ny] = new_g;
+                    int h = heuristic(nx, ny, endX, endY);
+                    open.push({nx, ny, new_g + h, new_g, h});
+                }
+            }
+        }
+    }
+    cout << "No path found" << endl;
+}
+int main() {
+    vector<vector<int>> grid = {
+        {0, 0, 0, 0},
+        {0, 1, 1, 0},
+        {0, 0, 0, 0}
+    };
+    aStar(grid, 0, 0, 2, 3);
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>heuristic</code>: Estimates cost to goal (Manhattan distance).<br>
+                - <code>f = g + h</code>: Total cost (path cost + heuristic).<br>
+                - <code>priority_queue</code>: Prioritizes nodes with lowest f.<br>
+                - Time Complexity: O(b^d), Space Complexity: O(b^d), where b is branching factor, d is depth.</p>
+                <p><strong>Example 1: Write a program to implement A* pathfinding on a grid.</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+using namespace std;
+struct Node {
+    int x, y, f, g, h;
+    bool operator>(const Node& other) const { return f > other.f; }
+};
+int heuristic(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+void aStar(vector<vector<int>>& grid, int startX, int startY, int endX, int endY) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<bool>> closed(rows, vector<bool>(cols, false));
+    vector<vector<int>> g_score(rows, vector<int>(cols, INT_MAX));
+    priority_queue<Node, vector<Node>, greater<Node>> open;
+    g_score[startX][startY] = 0;
+    open.push({startX, startY, heuristic(startX, startY, endX, endY), 0, heuristic(startX, startY, endX, endY)});
+    int dx[] = {0, 0, 1, -1}, dy[] = {1, -1, 0, 0};
+    while (!open.empty()) {
+        Node curr = open.top();
+        open.pop();
+        if (curr.x == endX && curr.y == endY) {
+            cout << "Path found with cost: " << curr.g << endl;
+            return;
+        }
+        closed[curr.x][curr.y] = true;
+        for (int i = 0; i < 4; i++) {
+            int nx = curr.x + dx[i], ny = curr.y + dy[i];
+            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && !grid[nx][ny] && !closed[nx][ny]) {
+                int new_g = curr.g + 1;
+                if (new_g < g_score[nx][ny]) {
+                    g_score[nx][ny] = new_g;
+                    int h = heuristic(nx, ny, endX, endY);
+                    open.push({nx, ny, new_g + h, new_g, h});
+                }
+            }
+        }
+    }
+    cout << "No path found" << endl;
+}
+int main() {
+    int rows, cols;
+    cout << "Enter grid dimensions (rows cols): ";
+    cin >> rows >> cols;
+    vector<vector<int>> grid(rows, vector<int>(cols));
+    cout << "Enter grid (0 for path, 1 for obstacle): ";
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            cin >> grid[i][j];
+    int startX, startY, endX, endY;
+    cout << "Enter start (x y) and end (x y): ";
+    cin >> startX >> startY >> endX >> endY;
+    aStar(grid, startX, startY, endX, endY);
+    return 0;
+}
+</code></pre>
+                <p><strong>Example 2: Write a program to find the A* path cost in a weighted grid.</strong></p>
+                <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+using namespace std;
+struct Node {
+    int x, y, f, g, h    int;
+    bool operator>(const Node& other) const { return f > other.f; }
+};
+int heuristic(int x1, int y1,int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+int aStarCost(vector<vector<int>>& grid, int startX, int startY, int endX, int endY) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<bool>> closed(rows, vector<bool>(cols, false));
+    vector<vector<int>> g_score(rows, vector<int>(cols, INT_MAX));
+    priority_queue<Node, vector<Node>, greater<Node>> open;
+    g_score[startX][startY] = 0;
+    open.push({startX, startY, heuristic(startX, startY, endX, endY), 0, heuristic(startX, startY, endX, endY)});
+    int dx[] = {0, 0, 1, 1}, dy[] = {1, -1, 0, 0};
+    while (!open.empty()) {
+        Node curr = open.top();
+        open.pop();
+        if (curr.x == endX && curr.y == endY) {
+            return curr.g;
+        }
+        closed[curr.x][curr.y] = true;
+        for (int i = 0; i < 4; i++) {
+            int nx = curr.x + dx[i], ny = curr.y + dy[i];
+            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && !closed[nx][ny]) {
+                int new_g = curr.g + grid[nx][ny];
+                if (new_g < g_score[nx][ny]) {
+                    g_score[nx][ny] = new_g;
+                    int h = heuristic(nx, ny, endX, endY);
+                    open.push({nx, ny, new_g + h, new_g, h});
+                }
+            }
+        }
+    }
+    return -1;
+}
+int main() {
+    vector<vector<int>> grid = {
+        {1, 2, 3, 4},
+        {2, 0, 0, 5},
+        {3, 4, 5, 1}
+    };
+    int cost = aStarCost(grid, 0, 0, 2, 3);
+    cout << "Path cost: " << (cost == -1 ? "No path" : to_string(cost)) << endl;
+}
+</code></pre>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

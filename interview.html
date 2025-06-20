@@ -1,0 +1,421 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview & Practice - DSA in C++</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-menu {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-menu li {
+            margin: 10px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #0056b3;
+        }
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .note {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .subtopic {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="programming_basics.html">1. Programming Basics</a></li>
+                <li><a href="logic_building.html">2. Logic Building & Complexity</a></li>
+                <li><a href="linear_ds.html">3. Linear Data Structures</a></li>
+                <li><a href="non_linear_ds.html">4. Non-Linear Data Structures</a></li>
+                <li><a href="searching.html">5. Searching Algorithms</a></li>
+                <li><a href="sorting.html">6. Sorting Algorithms</a></li>
+                <li><a href="techniques.html">7. Techniques & Approaches</a></li>
+                <li><a href="algorithms.html">8. Algorithms</a></li>
+                <li><a href="advanced.html">9. Advanced Topics</a></li>
+                <li><a href="interview.html">10. Interview & Practice</a></li>
+            </ul>
+        </nav>
+        <section>
+            <h2>10. Interview & Practice</h2>
+            <div class="subtopic">
+                <h3>Common Interview Questions</h3>
+                <p><strong>Overview:</strong> Common interview questions test core DSA concepts like arrays, strings, trees, graphs, and algorithmic techniques (e.g., two pointers, dynamic programming). They assess problem-solving, coding efficiency, and clarity in explaining solutions.</p>
+                <p><strong>Real-life Analogy:</strong> Like preparing for a job interview by practicing answers to frequently asked questions to ensure confidence and clarity.</p>
+                <p><strong>Example Question 1: Reverse a Linked List</strong></p>
+                <p><strong>Problem:</strong> Given a singly linked list, reverse it and return the new head.</p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+ListNode* reverseList(ListNode* head) {
+    ListNode *prev = nullptr, *curr = head, *next = nullptr;
+    while (curr) {
+        next = curr->next;   // Store next node
+        curr->next = prev;   // Reverse link
+        prev = curr;         // Move prev forward
+        curr = next;         // Move curr forward
+    }
+    return prev; // New head
+}
+int main() {
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head = reverseList(head);
+    ListNode* temp = head;
+    while (temp) {
+        cout << temp->val << " ";
+        temp = temp->next;
+    }
+    cout << endl; // Output: 3 2 1
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>prev = nullptr</code>: Tracks previous node, initially null.<br>
+                - <code>next = curr->next</code>: Saves next node before reversing link.<br>
+                - <code>curr->next = prev</code>: Reverses the link to point to previous node.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+                <p><strong>Example Question 2: Find Cycle in Linked List (Floyd’s Cycle Detection)</strong></p>
+                <p><strong>Problem:</strong> Detect if a singly linked list has a cycle.</p>
+                <pre><code>#include <iostream>
+using namespace std;
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+bool hasCycle(ListNode* head) {
+    ListNode *slow = head, *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;        // Move one step
+        fast = fast->next->next;  // Move two steps
+        if (slow == fast) return true; // Cycle detected
+    }
+    return false;
+}
+int main() {
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = head->next; // Creates cycle
+    cout << (hasCycle(head) ? "Cycle detected" : "No cycle") << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>slow = slow->next</code>: Moves one step.<br>
+                - <code>fast = fast->next->next</code>: Moves two steps.<br>
+                - <code>slow == fast</code>: Indicates a cycle if pointers meet.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+            </div>
+            <div class="subtopic">
+                <h3>Coding Practice Problems</h3>
+                <p><strong>Overview:</strong> Coding practice problems help reinforce DSA concepts through hands-on coding. They range from easy (array manipulation) to hard (graph algorithms) and simulate real interview challenges.</p>
+                <p><strong>Real-life Analogy:</strong> Like practicing a sport by doing drills to improve specific skills before a big game.</p>
+                <p><strong>Problem 1: Longest Palindromic Substring</strong></p>
+                <p><strong>Problem:</strong> Given a string, find the longest substring that is a palindrome.</p>
+                <pre><code>#include <iostream>
+#include <string>
+using namespace std;
+string longestPalindrome(string s) {
+    int n = s.length(), start = 0, maxLen = 1;
+    for (int i = 0; i < n; i++) {
+        // Check for odd-length palindromes
+        int left = i, right = i;
+        while (left >= 0 && right < n && s[left] == s[right]) {
+            if (right - left + 1 > maxLen) {
+                start = left;
+                maxLen = right - left + 1;
+            }
+            left--;
+            right++;
+        }
+        // Check for even-length palindromes
+        left = i; right = i + 1;
+        while (left >= 0 && right < n && s[left] == s[right]) {
+            if (right - left + 1 > maxLen) {
+                start = left;
+                maxLen = right - left + 1;
+            }
+            left--;
+            right++;
+        }
+    }
+    return s.substr(start, maxLen);
+}
+int main() {
+    string s = "babad";
+    cout << "Longest Palindromic Substring: " << longestPalindrome(s) << endl; // Output: "bab" or "aba"
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>left, right</code>: Expand around center for odd/even palindromes.<br>
+                - <code>s[left] == s[right]</code>: Checks if characters match.<br>
+                - <code>start, maxLen</code>: Tracks longest palindrome found.<br>
+                - Time Complexity: O(n²), Space Complexity: O(1).</p>
+                <p><strong>Problem 2: Maximum Subarray Sum (Kadane’s Algorithm)</strong></p>
+                <p><strong>Problem:</strong> Find the contiguous subarray with the largest sum.</p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int maxSubArray(vector<int>& nums) {
+    int maxSum = nums[0], currSum = nums[0];
+    for (int i = 1; i < nums.size(); i++) {
+        currSum = max(nums[i], currSum + nums[i]); // Include current or start new
+        maxSum = max(maxSum, currSum);             // Update max sum
+    }
+    return maxSum;
+}
+int main() {
+    vector<int> nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    cout << "Maximum Subarray Sum: " << maxSubArray(nums) << endl; // Output: 6
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>currSum</code>: Tracks sum of current subarray.<br>
+                - <code>max(nums[i], currSum + nums[i])</code>: Decides to start new or extend.<br>
+                - <code>maxSum</code>: Stores maximum sum found.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+            </div>
+            <div class="subtopic">
+                <h3>Tips for Competitive Programming</h3>
+                <p><strong>Overview:</strong> Competitive programming requires fast problem-solving, efficient coding, and familiarity with standard algorithms. Key tips include mastering STL, optimizing I/O, handling edge cases, and practicing on platforms like Codeforces or AtCoder.</p>
+                <p><strong>Real-life Analogy:</strong> Like training for a chess tournament by studying common tactics and practicing timed matches.</p>
+                <p><strong>Tip Example: Optimize Input/Output in C++</strong></p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    ios_base::sync_with_stdio(false); // Disable sync with C I/O
+    cin.tie(nullptr);                 // Untie cin from cout
+    int n;
+    cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    int sum = 0;
+    for (int x : arr) sum += x;
+    cout << sum << '\n'; // Use '\n' instead of endl
+    return 0;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>ios::sync_with_stdio(false)</code>: Speeds up I/O by disabling C sync.<br>
+                - <code>cin.tie(nullptr)</code>: Prevents flushing output unnecessarily.<br>
+                - <code>\n'</code>: Faster than '\n' as it avoids flushing.<br>
+                - Impact: Reduces runtime for large inputs.</p>
+                <p><strong>Tip Example: Handle Edge Cases (Example: Array Rotation)</strong></p>
+                <p><strong>Problem:</strong> Rotate an array right by k positions.</p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+void rotate(vector<int>& arr, int k) {
+    int n = arr.size();
+    if (n == 0 || k == 0) return; // Handle edge cases
+    k = k % n;                    // Normalize k
+    if (k < 0) k += n;            // Handle negative k
+    reverse(arr.begin(), arr.end());           // Reverse entire array
+    reverse(arr.begin(), arr.begin() + k);     // Reverse first k elements
+    reverse(arr.begin() + k, arr.end());       // Reverse rest
+}
+int main() {
+    vector<int> arr = {1, 2, 3, 4, 5};
+    int k = 2;
+    rotate(arr, k);
+    for (int x : arr) cout << x << " "; // Output: 4 5 1 2 3
+    cout << endl;
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>n == 0 || k == 0</code>: Handles empty array or no rotation.<br>
+                - <code>k = k % n</code>: Normalizes k to avoid redundant rotations.<br>
+                - <code>reverse</code>: Uses three reversals to achieve rotation.<br>
+                - Time Complexity: O(n), Space Complexity: O(1).</p>
+            </div>
+            <div class="subtopic">
+                <h3>Mock Interview Scenarios</h3>
+                <p><strong>Overview:</strong> Mock interviews simulate real coding interviews, helping you practice explaining solutions, managing time, and handling pressure. Scenarios include solving problems under time constraints and answering follow-up questions.</p>
+                <p><strong>Real-life Analogy:</strong> Like rehearsing a play to perfect your performance before the actual show.</p>
+                <p><strong>Scenario 1: Merge Intervals</strong></p>
+                <p><strong>Problem:</strong> Given a collection of intervals, merge overlapping intervals.</p>
+                <pre><code>#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    if (intervals.empty()) return {};
+    sort(intervals.begin(), intervals.end()); // Sort by start time
+    vector<vector<int>> result;
+    result.push_back(intervals[0]);
+    for (int i = 1; i < intervals.size(); i++) {
+        if (result.back()[1] >= intervals[i][0]) { // Overlap
+            result.back()[1] = max(result.back()[1], intervals[i][1]);
+        } else {
+            result.push_back(intervals[i]); // No overlap
+        }
+    }
+    return result;
+}
+int main() {
+    vector<vector<int>> intervals = {{1, 3}, {2, 6}, {8, 10}, {15, 18}};
+    vector<vector<int>> merged = merge(intervals);
+    for (auto& interval : merged) {
+        cout << "[" << interval[0] << ", " << interval[1] << "] ";
+    }
+    cout << endl; // Output: [1, 6] [8, 10] [15, 18]
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>sort</code>: Sorts intervals by start time.<br>
+                - <code>result.back()[1] >= intervals[i][0]</code>: Checks for overlap.<br>
+                - <code>max</code>: Extends end time if overlapping.<br>
+                - Time Complexity: O(n log n), Space Complexity: O(n).</p>
+                <p><strong>Follow-up Question:</strong> How would you modify the solution if intervals are streamed? (Hint: Use a priority queue to process in order.)</p>
+                <p><strong>Scenario 2: Number of Islands</strong></p>
+                <p><strong>Problem:</strong> Given a 2D grid of '1's (land) and '0's (water), count the number of islands.</p>
+                <pre><code>#include <iostream>
+#include <vector>
+using namespace std;
+void dfs(vector<vector<char>>& grid, int i, int j, int rows, int cols) {
+    if (i < 0 || i >= rows || j < 0 || j >= cols || grid[i][j] != '1') return;
+    grid[i][j] = '0'; // Mark as visited
+    dfs(grid, i - 1, j, rows, cols); // Up
+    dfs(grid, i + 1, j, rows, cols); // Down
+    dfs(grid, i, j - 1, rows, cols); // Left
+    dfs(grid, i, j + 1, rows, cols); // Right
+}
+int numIslands(vector<vector<char>>& grid) {
+    if (grid.empty()) return 0;
+    int rows = grid.size(), cols = grid[0].size(), islands = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (grid[i][j] == '1') {
+                dfs(grid, i, j, rows, cols);
+                islands++;
+            }
+        }
+    }
+    return islands;
+}
+int main() {
+    vector<vector<char>> grid = {
+        {'1', '1', '0', '0', '0'},
+        {'1', '1', '0', '0', '0'},
+        {'0', '0', '1', '0', '0'},
+        {'0', '0', '0', '1', '1'}
+    };
+    cout << "Number of Islands: " << numIslands(grid) << endl; // Output: 3
+}
+</code></pre>
+                <p class="note">Explanation: <br>
+                - <code>dfs</code>: Marks connected land as visited using depth-first search.<br>
+                - <code>grid[i][j] = '0'</code>: Prevents revisiting.<br>
+                - <code>islands++</code>: Increments for each new island.<br>
+                - Time Complexity: O(rows * cols), Space Complexity: O(rows * cols) for recursion stack.</p>
+                <p><strong>Follow-up Question:</strong> How would you find the size of the largest island? (Hint: Modify DFS to count cells in each island.)</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

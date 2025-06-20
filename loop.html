@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: Calibri, sans-serif; 
+            line-height: 1.6; 
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .code-block { 
+            background-color: #000; 
+            color: #fff; 
+            padding: 15px;
+            font-family: Consolas, monospace;
+            border-radius: 4px;
+            white-space: pre;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .output-block {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            font-family: Consolas, monospace;
+            margin: 10px 0;
+            white-space: pre;
+        }
+        .section-title { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            margin-top: 30px; 
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .beginner { 
+            color: #2ECC40; 
+            background-color: #e8f5e8;
+        }
+        .intermediate { 
+            color: #FF851B; 
+            background-color: #fff4e6;
+        }
+        .advanced { 
+            color: #FF4136; 
+            background-color: #ffe6e6;
+        }
+        .pattern { 
+            color: #0074D9; 
+            background-color: #e6f3ff;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question strong {
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== BEGINNER QUESTIONS ========== -->
+<div class="section-title beginner">🟢 Beginner-Level Questions</div>
+
+<!-- Question 1 -->
+<div class="question">
+    <div><strong>1. Print numbers from 1 to 10 using a for loop</strong></div>
+    <div class="code-block">for(int i = 1; i <= 10; i++) {
+    cout << i << " ";
+}</div>
+    <div class="output-block">1 2 3 4 5 6 7 8 9 10</div>
+</div>
+
+<!-- Question 2 -->
+<div class="question">
+    <div><strong>2. Print even numbers from 1 to 50 using a while loop</strong></div>
+    <div class="code-block">int i = 2;
+while(i <= 50) {
+    cout << i << " ";
+    i += 2;
+}</div>
+    <div class="output-block">2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50</div>
+</div>
+
+<!-- Question 3 -->
+<div class="question">
+    <div><strong>3. Calculate the sum of numbers from 1 to N using a loop</strong></div>
+    <div class="code-block">int sum = 0;
+for(int i = 1; i <= N; i++) {
+    sum += i;
+}
+cout << sum;</div>
+    <div class="output-block">15</div>
+</div>
+
+<!-- Question 4 -->
+<div class="question">
+    <div><strong>4. Print the multiplication table of a number N</strong></div>
+    <div class="code-block">for(int i = 1; i <= 10; i++) {
+    cout << N << " x " << i << " = " << N * i << endl;
+}</div>
+    <div class="output-block">5 x 1 = 5
+5 x 2 = 10
+5 x 3 = 15
+5 x 4 = 20
+5 x 5 = 25
+5 x 6 = 30
+5 x 7 = 35
+5 x 8 = 40
+5 x 9 = 45
+5 x 10 = 50</div>
+</div>
+
+<!-- Question 5 -->
+<div class="question">
+    <div><strong>5. Count the number of digits in a number</strong></div>
+    <div class="code-block">int count = 0;
+while(num != 0) {
+    num /= 10;
+    count++;
+}
+cout << count;</div>
+    <div class="output-block">5</div>
+</div>
+
+<!-- Question 6 -->
+<div class="question">
+    <div><strong>6. Print the reverse of a number</strong></div>
+    <div class="code-block">int rev = 0;
+while(num != 0) {
+    rev = rev * 10 + num % 10;
+    num /= 10;
+}
+cout << rev;</div>
+    <div class="output-block">4321</div>
+</div>
+
+<!-- Question 7 -->
+<div class="question">
+    <div><strong>7. Check if a number is a palindrome</strong></div>
+    <div class="code-block">int original = num, rev = 0;
+while(num != 0) {
+    rev = rev * 10 + num % 10;
+    num /= 10;
+}
+cout << (original == rev ? "Yes" : "No");</div>
+    <div class="output-block">Yes</div>
+</div>
+
+<!-- Question 8 -->
+<div class="question">
+    <div><strong>8. Calculate the factorial of a number N</strong></div>
+    <div class="code-block">int fact = 1;
+for(int i = 1; i <= N; i++) {
+    fact *= i;
+}
+cout << fact;</div>
+    <div class="output-block">120</div>
+</div>
+
+<!-- Question 9 -->
+<div class="question">
+    <div><strong>9. Display all alphabets from 'a' to 'z' using a loop</strong></div>
+    <div class="code-block">for(char c = 'a'; c <= 'z'; c++) {
+    cout << c << " ";
+}</div>
+    <div class="output-block">a b c d e f g h i j k l m n o p q r s t u v w x y z</div>
+</div>
+
+<!-- Question 10 -->
+<div class="question">
+    <div><strong>10. Sum of even and odd numbers between 1 and N separately</strong></div>
+    <div class="code-block">int evenSum = 0, oddSum = 0;
+for(int i = 1; i <= N; i++) {
+    if(i % 2 == 0) evenSum += i;
+    else oddSum += i;
+}
+cout << "Even: " << evenSum << " Odd: " << oddSum;</div>
+    <div class="output-block">Even: 30 Odd: 25</div>
+</div>
+
+<!-- ========== INTERMEDIATE QUESTIONS ========== -->
+<div class="section-title intermediate">🟡 Intermediate-Level Questions</div>
+
+<!-- Question 11 -->
+<div class="question">
+    <div><strong>11. Check if a number is a prime number using a loop</strong></div>
+    <div class="code-block">bool isPrime = true;
+for(int i = 2; i <= num / 2; i++) {
+    if(num % i == 0) {
+        isPrime = false;
+        break;
+    }
+}
+cout << (num > 1 && isPrime ? "Prime" : "Not Prime");</div>
+    <div class="output-block">Prime</div>
+</div>
+
+<!-- Question 12 -->
+<div class="question">
+    <div><strong>12. Find the Greatest Common Divisor (GCD) of two numbers</strong></div>
+    <div class="code-block">int gcd = 1;
+for(int i = 1; i <= a && i <= b; i++) {
+    if(a % i == 0 && b % i == 0) gcd = i;
+}
+cout << gcd;</div>
+    <div class="output-block">10</div>
+</div>
+
+<!-- Question 13 -->
+<div class="question">
+    <div><strong>13. Find the Least Common Multiple (LCM) of two numbers</strong></div>
+    <div class="code-block">int lcm = max(a, b);
+while(true) {
+    if(lcm % a == 0 && lcm % b == 0) break;
+    lcm++;
+}
+cout << lcm;</div>
+    <div class="output-block">12</div>
+</div>
+
+<!-- Question 14 -->
+<div class="question">
+    <div><strong>14. Print the Fibonacci series up to N terms using a while loop</strong></div>
+    <div class="code-block">int a = 0, b = 1, count = 0;
+while(count < N) {
+    cout << a << " ";
+    int temp = b;
+    b = a + b;
+    a = temp;
+    count++;
+}</div>
+    <div class="output-block">0 1 1 2 3 5 8</div>
+</div>
+
+<!-- Question 15 -->
+<div class="question">
+    <div><strong>15. Sum the digits of a number</strong></div>
+    <div class="code-block">int sum = 0;
+while(num != 0) {
+    sum += num % 10;
+    num /= 10;
+}
+cout << sum;</div>
+    <div class="output-block">6</div>
+</div>
+
+<!-- Question 16 -->
+<div class="question">
+    <div><strong>16. Check if a number is an Armstrong number</strong></div>
+    <div class="code-block">int original = num, sum = 0;
+while(num != 0) {
+    int digit = num % 10;
+    sum += digit * digit * digit;
+    num /= 10;
+}
+cout << (sum == original ? "Armstrong" : "Not Armstrong");</div>
+    <div class="output-block">Armstrong</div>
+</div>
+
+<!-- Question 17 -->
+<div class="question">
+    <div><strong>17. Find the first N prime numbers using a while loop</strong></div>
+    <div class="code-block">int count = 0, num = 2;
+while(count < N) {
+    bool isPrime = true;
+    for(int i = 2; i <= num / 2; i++) {
+        if(num % i == 0) {
+            isPrime = false;
+            break;
+        }
+    }
+    if(isPrime) {
+        cout << num << " ";
+        count++;
+    }
+    num++;
+}</div>
+    <div class="output-block">2 3 5 7 11</div>
+</div>
+
+<!-- Question 18 -->
+<div class="question">
+    <div><strong>18. Convert a decimal number to binary using a loop</strong></div>
+    <div class="code-block">string binary = "";
+while(num > 0) {
+    binary = to_string(num % 2) + binary;
+    num /= 2;
+}
+cout << binary;</div>
+    <div class="output-block">1101</div>
+</div>
+
+<!-- Question 19 -->
+<div class="question">
+    <div><strong>19. Count the number of vowels in a string using a loop</strong></div>
+    <div class="code-block">int count = 0;
+for(char c : str) {
+    if(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+       c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+        count++;
+    }
+}
+cout << count;</div>
+    <div class="output-block">3</div>
+</div>
+
+<!-- Question 20 -->
+<div class="question">
+    <div><strong>20. Check if a string is a palindrome using a loop</strong></div>
+    <div class="code-block">bool isPalindrome = true;
+int n = str.length();
+for(int i = 0; i < n / 2; i++) {
+    if(str[i] != str[n - 1 - i]) {
+        isPalindrome = false;
+        break;
+    }
+}
+cout << (isPalindrome ? "Palindrome" : "Not Palindrome");</div>
+    <div class="output-block">Palindrome</div>
+</div>
+
+<!-- ========== ADVANCED QUESTIONS ========== -->
+<div class="section-title advanced">🔴 Advanced-Level Questions</div>
+
+<!-- Question 21 -->
+<div class="question">
+    <div><strong>21. Find the N-th Fibonacci number using iteration</strong></div>
+    <div class="code-block">int a = 0, b = 1, fib;
+if(N == 1) fib = a;
+else if(N == 2) fib = b;
+else {
+    for(int i = 3; i <= N; i++) {
+        fib = a + b;
+        a = b;
+        b = fib;
+    }
+}
+cout << fib;</div>
+    <div class="output-block">8</div>
+</div>
+
+<!-- Question 22 -->
+<div class="question">
+    <div><strong>22. Check if a number is a perfect number</strong></div>
+    <div class="code-block">int sum = 0;
+for(int i = 1; i < num; i++) {
+    if(num % i == 0) sum += i;
+}
+cout << (sum == num ? "Perfect" : "Not Perfect");</div>
+    <div class="output-block">Perfect</div>
+</div>
+
+<!-- Question 23 -->
+<div class="question">
+    <div><strong>23. Generate the Collatz sequence for a number</strong></div>
+    <div class="code-block">while(num != 1) {
+    cout << num << " ";
+    if(num % 2 == 0) num /= 2;
+    else num = 3 * num + 1;
+}
+cout << "1";</div>
+    <div class="output-block">6 3 10 5 16 8 4 2 1</div>
+</div>
+
+<!-- Question 24 -->
+<div class="question">
+    <div><strong>24. Find the power of a number (a^b) using loop</strong></div>
+    <div class="code-block">int result = 1;
+for(int i = 1; i <= b; i++) {
+    result *= a;
+}
+cout << result;</div>
+    <div class="output-block">16</div>
+</div>
+
+<!-- Question 25 -->
+<div class="question">
+    <div><strong>25. Check whether a number is a Happy Number</strong></div>
+    <div class="code-block">int sum, digit;
+while(num != 1 && num != 4) {
+    sum = 0;
+    while(num > 0) {
+        digit = num % 10;
+        sum += digit * digit;
+        num /= 10;
+    }
+    num = sum;
+}
+cout << (num == 1 ? "Happy" : "Not Happy");</div>
+    <div class="output-block">Happy</div>
+</div>
+
+<!-- Question 26 -->
+<div class="question">
+    <div><strong>26. Find the digital root of a number</strong></div>
+    <div class="code-block">while(num >= 10) {
+    int sum = 0;
+    while(num > 0) {
+        sum += num % 10;
+        num /= 10;
+    }
+    num = sum;
+}
+cout << num;</div>
+    <div class="output-block">2</div>
+</div>
+
+<!-- Question 27 -->
+<div class="question">
+    <div><strong>27. Reverse a string using a loop</strong></div>
+    <div class="code-block">string rev = "";
+for(int i = str.length() - 1; i >= 0; i--) {
+    rev += str[i];
+}
+cout << rev;</div>
+    <div class="output-block">olleh</div>
+</div>
+
+<!-- Question 28 -->
+<div class="question">
+    <div><strong>28. Count the frequency of a specific character in a string</strong></div>
+    <div class="code-block">int count = 0;
+for(char c : str) {
+    if(c == target) count++;
+}
+cout << count;</div>
+    <div class="output-block">3</div>
+</div>
+
+<!-- Question 29 -->
+<div class="question">
+    <div><strong>29. Rotate the digits of a number (e.g., 1234 → 4123)</strong></div>
+    <div class="code-block">int last_digit = num % 10;
+num /= 10;
+int digits = 1, temp = num;
+while(temp > 0) {
+    temp /= 10;
+    digits *= 10;
+}
+num = last_digit * digits + num;
+cout << num;</div>
+    <div class="output-block">4123</div>
+</div>
+
+<!-- Question 30 -->
+<div class="question">
+    <div><strong>30. Check if a number is Automorphic</strong></div>
+    <div class="code-block">int sq = num * num;
+int temp = num;
+bool isAuto = true;
+while(num > 0) {
+    if(num % 10 != sq % 10) {
+        isAuto = false;
+        break;
+    }
+    num /= 10;
+    sq /= 10;
+}
+cout << (isAuto ? "Automorphic" : "Not Automorphic");</div>
+    <div class="output-block">Automorphic</div>
+</div>
+
+<!-- ========== PATTERNS ========== -->
+<div class="section-title pattern">⭐ Star, Alphabet & Number Patterns</div>
+
+<!-- Pattern 1 -->
+<div class="question">
+    <div><strong>1. Square Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n; j++) {
+        cout << "* ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">* * * * 
+* * * * 
+* * * * 
+* * * * </div>
+</div>
+
+<!-- Pattern 2 -->
+<div class="question">
+    <div><strong>2. Right-Angled Triangle</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        cout << "* ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">* 
+* * 
+* * * 
+* * * * </div>
+</div>
+
+<!-- Pattern 3 -->
+<div class="question">
+    <div><strong>3. Inverted Right-Angled Triangle</strong></div>
+    <div class="code-block">for(int i = n; i >= 1; i--) {
+    for(int j = 1; j <= i; j++) {
+        cout << "* ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">* * * * 
+* * * 
+* * 
+* </div>
+</div>
+
+<!-- Pattern 4 -->
+<div class="question">
+    <div><strong>4. Right-Angled Triangle (Rotated 90° Right)</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) {
+        cout << "  ";
+    }
+    for(int k = 1; k <= i; k++) {
+        cout << "* ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">      * 
+    * * 
+  * * * 
+* * * * </div>
+</div>
+
+<!-- Pattern 5 -->
+<div class="question">
+    <div><strong>5. Pyramid Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}</div>
+    <div class="output-block">   *
+  ***
+ *****
+*******</div>
+</div>
+
+<!-- Pattern 6 -->
+<div class="question">
+    <div><strong>6. Inverted Pyramid</strong></div>
+    <div class="code-block">for(int i = n; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}</div>
+    <div class="output-block">*******
+ *****
+  ***
+   *</div>
+</div>
+
+<!-- Pattern 7 -->
+<div class="question">
+    <div><strong>7. Diamond Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}
+for(int i = n - 1; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}</div>
+    <div class="output-block">   *
+  ***
+ *****
+*******
+ *****
+  ***
+   *</div>
+</div>
+
+<!-- Pattern 8 -->
+<div class="question">
+    <div><strong>8. Half Pyramid with Numbers</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        cout << j << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 
+1 2 
+1 2 3 
+1 2 3 4 </div>
+</div>
+
+<!-- Pattern 9 -->
+<div class="question">
+    <div><strong>9. Inverted Half Pyramid with Numbers</strong></div>
+    <div class="code-block">for(int i = n; i >= 1; i--) {
+    for(int j = 1; j <= i; j++) {
+        cout << j << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 2 3 4 
+1 2 3 
+1 2 
+1 </div>
+</div>
+
+<!-- Pattern 10 -->
+<div class="question">
+    <div><strong>10. Floyd's Triangle</strong></div>
+    <div class="code-block">int count = 1;
+for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        cout << count++ << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 
+2 3 
+4 5 6 
+7 8 9 10 </div>
+</div>
+
+<!-- Pattern 11 -->
+<div class="question">
+    <div><strong>11. Alphabet Pattern (Increasing Letters)</strong></div>
+    <div class="code-block">char ch = 'A';
+for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        cout << ch << " ";
+    }
+    ch++;
+    cout << endl;
+}</div>
+    <div class="output-block">A 
+B B 
+C C C 
+D D D D </div>
+</div>
+
+<!-- Pattern 12 -->
+<div class="question">
+    <div><strong>12. Alphabet Pattern (Repeated Row Letter)</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    char ch = 'A' + i - 1;
+    for(int j = 1; j <= i; j++) {
+        cout << ch << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">A 
+B B 
+C C C 
+D D D D </div>
+</div>
+
+<!-- Pattern 13 -->
+<div class="question">
+    <div><strong>13. Hollow Square Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n; j++) {
+        if(i == 1 || i == n || j == 1 || j == n) 
+            cout << "* ";
+        else 
+            cout << "  ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">* * * * * 
+*       * 
+*       * 
+*       * 
+* * * * * </div>
+</div>
+
+<!-- Pattern 14 -->
+<div class="question">
+    <div><strong>14. Hollow Right-Angled Triangle</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        if(j == 1 || i == n || i == j) cout << "* ";
+        else cout << "  ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">* 
+* * 
+*   * 
+*     * 
+* * * * * </div>
+</div>
+
+<!-- Pattern 15 -->
+<div class="question">
+    <div><strong>15. Number Pyramid</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= i; k++) cout << i << " ";
+    cout << endl;
+}</div>
+    <div class="output-block">    1 
+   2 2 
+  3 3 3 
+ 4 4 4 4 
+5 5 5 5 5 </div>
+</div>
+
+<!-- Pattern 16 -->
+<div class="question">
+    <div><strong>16. Palindromic Number Pyramid</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int j = i; j >= 1; j--) cout << j;
+    for(int j = 2; j <= i; j++) cout << j;
+    cout << endl;
+}</div>
+    <div class="output-block">    1
+   212
+  32123
+ 4321234
+543212345</div>
+</div>
+
+<!-- Pattern 17 -->
+<div class="question">
+    <div><strong>17. Diamond Star Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}
+for(int i = n - 1; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << "*";
+    cout << endl;
+}</div>
+    <div class="output-block">   *
+  ***
+ *****
+*******
+ *****
+  ***
+   *</div>
+</div>
+
+<!-- Pattern 18 -->
+<div class="question">
+    <div><strong>18. Alphabet Pyramid</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(char ch = 'A'; ch < 'A' + i; ch++) cout << ch;
+    cout << endl;
+}</div>
+    <div class="output-block">    A
+   AB
+  ABC
+ ABCD
+ABCDE</div>
+</div>
+
+<!-- Pattern 19 -->
+<div class="question">
+    <div><strong>19. Inverted Number Pyramid</strong></div>
+    <div class="code-block">for(int i = n; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= 2 * i - 1; k++) cout << k;
+    cout << endl;
+}</div>
+    <div class="output-block">123456789
+ 1234567
+  12345
+   123
+    1</div>
+</div>
+
+<!-- Pattern 20 -->
+<div class="question">
+    <div><strong>20. Zigzag Pattern (Stars)</strong></div>
+    <div class="code-block">for(int i = 1; i <= 3; i++) {
+    for(int j = 1; j <= n; j++) {
+        if(((i + j) % 4 == 0) || (i == 2 && j % 4 == 0)) cout << "* ";
+        else cout << "  ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">  *     * 
+*   *   * 
+  *     * </div>
+</div>
+
+<!-- Pattern 21 -->
+<div class="question">
+    <div><strong>21. Hollow Diamond Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int j = 1; j <= 2 * i - 1; j++) {
+        if(j == 1 || j == 2 * i - 1) cout << "*";
+        else cout << " ";
+    }
+    cout << endl;
+}
+for(int i = n - 1; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int j = 1; j <= 2 * i - 1; j++) {
+        if(j == 1 || j == 2 * i - 1) cout << "*";
+        else cout << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">    *
+   * *
+  *   *
+ *     *
+*       *
+ *     *
+  *   *
+   * *
+    *</div>
+</div>
+
+<!-- Pattern 22 -->
+<div class="question">
+    <div><strong>22. Number Square Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n; j++) {
+        cout << i << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 1 1 1 
+2 2 2 2 
+3 3 3 3 
+4 4 4 4 </div>
+</div>
+
+<!-- Pattern 23 -->
+<div class="question">
+    <div><strong>23. Consecutive Number Square Pattern</strong></div>
+    <div class="code-block">int num = 1;
+for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n; j++) {
+        cout << num++ << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 2 3 4 
+5 6 7 8 
+9 10 11 12 
+13 14 15 16 </div>
+</div>
+
+<!-- Pattern 24 -->
+<div class="question">
+    <div><strong>24. Alphabet Square Pattern</strong></div>
+    <div class="code-block">char ch = 'A';
+for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n; j++) {
+        cout << ch << " ";
+        ch++;
+        if(ch > 'Z') ch = 'A';
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">A B C D E 
+F G H I J 
+K L M N O 
+P Q R S T 
+U V W X Y </div>
+</div>
+
+<!-- Pattern 25 -->
+<div class="question">
+    <div><strong>25. Hourglass Star Pattern</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j < i; j++) cout << " ";
+    for(int j = 1; j <= 2 * (n - i) + 1; j++) cout << "*";
+    cout << endl;
+}
+for(int i = 2; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int j = 1; j <= 2 * i - 1; j++) cout << "*";
+    cout << endl;
+}</div>
+    <div class="output-block">*******
+ *****
+  ***
+   *
+  ***
+ *****
+*******</div>
+</div>
+
+<!-- Pattern 26 -->
+<div class="question">
+    <div><strong>26. Alphabet Triangle (Increasing Letters Each Row)</strong></div>
+    <div class="code-block">char ch = 'A';
+for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) {
+        cout << ch << " ";
+        ch++;
+        if(ch > 'Z') ch = 'A';
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">A 
+B C 
+D E F 
+G H I J 
+K L M N O </div>
+</div>
+
+<!-- Pattern 27 -->
+<div class="question">
+    <div><strong>27. Reverse Number Triangle</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = i; j >= 1; j--) {
+        cout << j << " ";
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 
+2 1 
+3 2 1 
+4 3 2 1 
+5 4 3 2 1 </div>
+</div>
+
+<!-- Pattern 28 -->
+<div class="question">
+    <div><strong>28. Left Pascal's Triangle</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= i; j++) cout << "* ";
+    cout << endl;
+}
+for(int i = n - 1; i >= 1; i--) {
+    for(int j = 1; j <= i; j++) cout << "* ";
+    cout << endl;
+}</div>
+    <div class="output-block">* 
+* * 
+* * * 
+* * * * 
+* * * * * 
+* * * * 
+* * * 
+* * 
+* </div>
+</div>
+
+<!-- Pattern 29 -->
+<div class="question">
+    <div><strong>29. Pascal's Triangle (Numbers)</strong></div>
+    <div class="code-block">for(int i = 0; i < n; i++) {
+    int val = 1;
+    for(int j = 0; j <= i; j++) {
+        cout << val << " ";
+        val = val * (i - j) / (j + 1);
+    }
+    cout << endl;
+}</div>
+    <div class="output-block">1 
+1 1 
+1 2 1 
+1 3 3 1 
+1 4 6 4 1 </div>
+</div>
+
+<!-- Pattern 30 -->
+<div class="question">
+    <div><strong>30. Right Pascal's Triangle</strong></div>
+    <div class="code-block">for(int i = 1; i <= n; i++) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= i; k++) cout << "* ";
+    cout << endl;
+}
+for(int i = n - 1; i >= 1; i--) {
+    for(int j = 1; j <= n - i; j++) cout << " ";
+    for(int k = 1; k <= i; k++) cout << "* ";
+    cout << endl;
+}</div>
+    <div class="output-block">    * 
+   * * 
+  * * * 
+ * * * * 
+* * * * * 
+ * * * * 
+  * * * 
+   * * 
+    * </div>
+</div>
+
+</body>
+</html>
